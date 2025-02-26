@@ -1,6 +1,6 @@
 namespace Database.Models;
 
-public class Task
+public class ProjectTask
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -10,6 +10,9 @@ public class Task
     
     public int ExecutorId { get; set; }
     public Employee Executor { get; set; }
+    
+    public int ProjectId { get; set; }
+    public Project Project { get; set; }
     
     public TaskStatus Status { get; set; }
     public string Comment { get; set; }

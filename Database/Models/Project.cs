@@ -20,5 +20,5 @@ public class Project
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     
-    public List<Task> Tasks { get; set; } = new();
+    public List<ProjectTask> Tasks { get; set; } = new();
 }
