@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4ziv76+utsE=",
+  "dgSpecHash": "8fcAwbPV89Q=",
   "success": true,
-  "projectFilePath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\Database.csproj",
+  "projectFilePath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\Database.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\xsainteer\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\xsainteer\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

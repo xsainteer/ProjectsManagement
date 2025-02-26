@@ -2752,11 +2752,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\Database.csproj",
+      "projectUniqueName": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\Database.csproj",
       "projectName": "Database",
-      "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\Database.csproj",
+      "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\Database.csproj",
       "packagesPath": "C:\\Users\\xsainteer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\obj\\",
+      "outputPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\xsainteer\\AppData\\Roaming\\NuGet\\NuGet.Config"

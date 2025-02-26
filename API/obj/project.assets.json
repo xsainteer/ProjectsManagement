@@ -4703,11 +4703,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\API\\API.csproj",
+      "projectUniqueName": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\API\\API.csproj",
       "projectName": "API",
-      "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\API\\API.csproj",
+      "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\API\\API.csproj",
       "packagesPath": "C:\\Users\\xsainteer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\API\\obj\\",
+      "outputPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\xsainteer\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -4722,8 +4722,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\Database.csproj": {
-              "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsDatabase\\Database\\Database.csproj"
+            "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\Database.csproj": {
+              "projectPath": "C:\\Users\\xsainteer\\RiderProjects\\ProjectsManagement\\Database\\Database.csproj"
             }
           }
         }
