@@ -3,7 +3,7 @@ namespace Database.Models;
 public class Project
 {
     public int Id { get; set; }
-    public string ProjectName { get; set; } = null!;
+    public string Name { get; set; } = null!;
     
     public int ClientCompanyId { get; set; }
     public Company ClientCompany { get; set; } = null!;
@@ -14,8 +14,8 @@ public class Project
     
     public List<Employee> Employees { get; set; } = new();
     
-    public int SupervisorId { get; set; }
-    public Employee Supervisor { get; set; } = null!;
+    public int? SupervisorId { get; set; }
+    public Employee? Supervisor { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

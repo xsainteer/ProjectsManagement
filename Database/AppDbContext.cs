@@ -34,7 +34,7 @@ public class AppDbContext : DbContext
         //project - supervisor
         modelBuilder.Entity<Project>()
             .HasOne(p => p.Supervisor)
-            .WithOne(s => s.Project)
+            .WithOne()
             .HasForeignKey<Project>(p => p.SupervisorId)
             .OnDelete(DeleteBehavior.Restrict);
         
@@ -70,14 +70,14 @@ public class AppDbContext : DbContext
         //task - author
         modelBuilder.Entity<ProjectTask>()
             .HasOne(t => t.Author)
-            .WithMany(p => p.Tasks)
+            .WithMany(p => p.TasksAsAuthor)
             .HasForeignKey(t => t.AuthorId)
             .OnDelete(DeleteBehavior.Restrict);
         
         //task - executor
         modelBuilder.Entity<ProjectTask>()
             .HasOne(t => t.Executor)
-            .WithMany(p => p.Tasks)
+            .WithMany(p => p.TasksAsExecutor)
             .HasForeignKey(t => t.ExecutorId)
             .OnDelete(DeleteBehavior.Restrict);
         
