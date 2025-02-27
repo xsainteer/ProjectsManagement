@@ -12,7 +12,7 @@ public interface IProjectService
     public Task UpdateProjectAsync(int id, Project project);
     public Task DeleteProjectAsync(int id);
 }
-public class ProjectService
+public class ProjectService : IProjectService
 {
     private readonly IGenericRepository<Project> _repository;
     private readonly ILogger<ProjectService> _logger;
@@ -80,7 +80,7 @@ public class ProjectService
         //TODO
         try
         {
-            await _repository.UpdateAsync(project);
+            await _repository.Update(project);
         }
         catch (Exception ex)
         {

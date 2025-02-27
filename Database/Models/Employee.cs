@@ -7,8 +7,8 @@ public class Employee
     public string Speciality { get; set; }
     public List<ProjectTask> TasksAsAuthor { get; set; }
     public List<ProjectTask> TasksAsExecutor { get; set; }
-    public int ProjectId { get; set; }
-    public Project Project { get; set; }
+    
+    public List<EmployeeProject> EmployeeProjects { get; set; } = new();
     
     public int CompanyId { get; set; }
     public Company Company { get; set; }

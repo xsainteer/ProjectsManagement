@@ -14,21 +14,7 @@ public class ProjectTask
     public int ProjectId { get; set; }
     public Project Project { get; set; }
     
-    public TaskStatus Status { get; set; }
     public string Comment { get; set; }
-    public TaskPriority Priority { get; set; }
-}
-
-public enum TaskStatus
-{
-    Todo,
-    InProgress,
-    Done
-}
-
-public enum TaskPriority
-{
-    Low = 1,
-    Medium = 2,
-    High = 3
+    public Status Status { get; set; }
+    public Priority Priority { get; set; }
 }

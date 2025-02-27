@@ -8,8 +8,8 @@ public interface IGenericRepository<T> where T : class
     Task<T?> GetByIdAsync(int id);
     Task<List<T>> GetAllAsync(bool asNoTracking = false);
     Task AddAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task UpdateChangedFieldsAsync(T entity);
+    Task Update(T entity);
+    Task UpdateChangedFields(T entity);
     Task DeleteAsync(int id);
 }
 
@@ -47,7 +47,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         await _dbSet.AddAsync(entity);
     }
 
-    public Task UpdateAsync(T entity)
+    public Task Update(T entity)
     {
         _logger.LogInformation("Updating {Entity}", typeof(T).Name);
 
@@ -64,7 +64,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return Task.CompletedTask;
     }
 
-    public Task UpdateChangedFieldsAsync(T entity)
+    public Task UpdateChangedFields(T entity)
     {
 
         var entry = _context.Entry(entity);

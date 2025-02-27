@@ -10,9 +10,9 @@ public class AppDbContext : DbContext
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjectTask> Tasks { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-        
+    public AppDbContext(DbContextOptions<AppDbContext> options) 
+        : base(options) 
+    { 
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,11 +43,18 @@ public class AppDbContext : DbContext
         //employee relationships - start
         
         //employee - project
-        modelBuilder.Entity<Employee>()
-            .HasOne(e => e.Project)
-            .WithMany(p => p.Employees)
-            .HasForeignKey(e => e.ProjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<EmployeeProject>()
+            .HasKey(ep => new { ep.EmployeeId, ep.ProjectId });
+
+        modelBuilder.Entity<EmployeeProject>()
+            .HasOne(ep => ep.Employee)
+            .WithMany(e => e.EmployeeProjects)
+            .HasForeignKey(ep => ep.EmployeeId);
+
+        modelBuilder.Entity<EmployeeProject>()
+            .HasOne(ep => ep.Project)
+            .WithMany(p => p.EmployeeProjects)
+            .HasForeignKey(ep => ep.ProjectId);
 
         //employee - company
         modelBuilder.Entity<Employee>()
