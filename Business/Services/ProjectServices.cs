@@ -6,17 +6,21 @@ namespace Business.Services;
 
 public interface IProjectService
 {
-    
+    public Task<Project> GetProjectByIdAsync(int id);
+    public Task<List<Project>> GetAllProjectsAsync();
+    public Task AddProjectAsync(Project project);
+    public Task UpdateProjectAsync(int id, Project project);
+    public Task DeleteProjectAsync(int id);
 }
 public class ProjectService
 {
-    private readonly IProjectRepository _projectRepository;
+    private readonly IGenericRepository<Project> _repository;
     private readonly ILogger<ProjectService> _logger;
 
     
-    public ProjectService(IProjectRepository projectRepository, ILogger<ProjectService> logger)
+    public ProjectService(IGenericRepository<Project> repository, ILogger<ProjectService> logger)
     {
-        _projectRepository = projectRepository;
+        _repository = repository;
         _logger = logger;
     }
 
@@ -25,7 +29,7 @@ public class ProjectService
     {
         try
         {
-            return await _projectRepository.GetByIdAsync(id);
+            return await _repository.GetByIdAsync(id);
         }
         catch (Exception ex)
         {
@@ -39,7 +43,7 @@ public class ProjectService
     {
         try
         {
-            var projects = await _projectRepository.GetAllAsync();
+            var projects = await _repository.GetAllAsync();
             if (projects.Count == 0)
             {
                 _logger.LogInformation("No projects found");
@@ -54,14 +58,14 @@ public class ProjectService
     }
 
     
-    public async Task CreateProjectAsync(Project project)
+    public async Task AddProjectAsync(Project project)
     {
         try
         {
             //TODO
             //some logics to be added
 
-            await _projectRepository.CreateAsync(project);
+            await _repository.AddAsync(project);
         }
         catch (Exception ex)
         {
@@ -71,12 +75,12 @@ public class ProjectService
     }
 
     
-    public async Task UpdateProjectAsync(int id, Project updatedProject)
+    public async Task UpdateProjectAsync(int id, Project project)
     {
         //TODO
         try
         {
-            await _projectRepository.UpdateAsync(id, updatedProject);
+            await _repository.UpdateAsync(project);
         }
         catch (Exception ex)
         {
@@ -90,7 +94,7 @@ public class ProjectService
     {
         try
         {
-            await _projectRepository.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
         }
         catch (Exception ex)
         {
