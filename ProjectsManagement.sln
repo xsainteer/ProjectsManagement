@@ -2,9 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{FBA13127-C3A9-4FE9-87A0-48F60DF8AF6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{3DD1B70B-561F-446A-960D-F7E9A77E6E5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{3DD1B70B-561F-446A-960D-F7E9A77E6E5B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{3D15155D-80C7-444E-A49E-3E3C3358F46D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{4434B774-A2A5-4C48-9272-CA5180A00645}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +26,9 @@ Global
 		{3D15155D-80C7-444E-A49E-3E3C3358F46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D15155D-80C7-444E-A49E-3E3C3358F46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D15155D-80C7-444E-A49E-3E3C3358F46D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4434B774-A2A5-4C48-9272-CA5180A00645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4434B774-A2A5-4C48-9272-CA5180A00645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4434B774-A2A5-4C48-9272-CA5180A00645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4434B774-A2A5-4C48-9272-CA5180A00645}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

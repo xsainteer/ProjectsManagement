@@ -1,0 +1,41 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.Entities.Project
+
+<h2>Шаг 1: Основная информация о проекте</h2>
+
+<form asp-action="CreateProject" method="post">
+    <div id = "Step1">
+        <label asp-for="Name">Название проекта</label>
+        <input asp-for="Name" />
+    
+        <label asp-for="StartDate">Дата начала</label>
+        <input asp-for="StartDate" type="date" />
+    
+        <label asp-for="EndDate">Дата окончания</label>
+        <input asp-for="EndDate" type="date" />
+    
+        <label asp-for="Priority">Приоритет</label>
+        <input asp-for="Priority" />
+        
+        <button type="submit">Далее</button>
+        
+    </div>
+    
+    <div id = "Step2">
+        <label asp-for="Name">Название проекта</label>
+        <input asp-for="Name" />
+
+        <label asp-for="StartDate">Дата начала</label>
+        <input asp-for="StartDate" type="date" />
+
+        <label asp-for="EndDate">Дата окончания</label>
+        <input asp-for="EndDate" type="date" />
+
+        <label asp-for="Priority">Приоритет</label>
+        <input asp-for="Priority" />
+
+        <button type="submit">Далее</button>
+    </div>
+</form>
+<script>
+</script>

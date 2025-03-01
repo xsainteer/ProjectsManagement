@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Database.Repositories;
+namespace Data.Repositories;
 
 public interface IGenericRepository<T> where T : class
 {

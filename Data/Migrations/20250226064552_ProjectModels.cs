@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Database.Migrations
+namespace Data.Migrations
 {
     /// <inheritdoc />
     public partial class ProjectModels : Migration

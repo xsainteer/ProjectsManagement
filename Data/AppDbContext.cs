@@ -1,7 +1,7 @@
-﻿using Database.Models;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Database;
+namespace Data;
 
 public class AppDbContext : DbContext
 {

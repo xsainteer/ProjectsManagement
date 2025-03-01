@@ -1,6 +1,6 @@
 using Business.Services;
-using Database;
-using Database.Repositories;
+using Data;
+using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,4 +1,6 @@
-namespace Database.Models;
+using Domain.Enums;
+
+namespace Domain.Entities;
 
 public class Project
 {

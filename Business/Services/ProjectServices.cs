@@ -1,5 +1,5 @@
-using Database.Models;
-using Database.Repositories;
+using Data.Repositories;
+using Domain.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Business.Services;
@@ -14,13 +14,13 @@ public interface IProjectService
 }
 public class ProjectService : IProjectService
 {
-    private readonly IGenericRepository<Project> _repository;
+    private readonly IGenericRepository<Project> _projectRepository;
     private readonly ILogger<ProjectService> _logger;
 
     
-    public ProjectService(IGenericRepository<Project> repository, ILogger<ProjectService> logger)
+    public ProjectService(IGenericRepository<Project> projectRepository, ILogger<ProjectService> logger)
     {
-        _repository = repository;
+        _projectRepository = projectRepository;
         _logger = logger;
     }
 
@@ -29,7 +29,7 @@ public class ProjectService : IProjectService
     {
         try
         {
-            return await _repository.GetByIdAsync(id);
+            return await _projectRepository.GetByIdAsync(id);
         }
         catch (Exception ex)
         {
@@ -43,7 +43,7 @@ public class ProjectService : IProjectService
     {
         try
         {
-            var projects = await _repository.GetAllAsync();
+            var projects = await _projectRepository.GetAllAsync();
             if (projects.Count == 0)
             {
                 _logger.LogInformation("No projects found");
@@ -62,14 +62,11 @@ public class ProjectService : IProjectService
     {
         try
         {
-            //TODO
-            //some logics to be added
-
-            await _repository.AddAsync(project);
+            await _projectRepository.AddAsync(project);
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Error while creating project: {ex.Message}");
+            _logger.LogError("Error while creating project: {ErrorMessage}", ex.Message);
             throw;
         }
     }
@@ -80,7 +77,7 @@ public class ProjectService : IProjectService
         //TODO
         try
         {
-            await _repository.Update(project);
+            await _projectRepository.Update(project);
         }
         catch (Exception ex)
         {
@@ -94,7 +91,7 @@ public class ProjectService : IProjectService
     {
         try
         {
-            await _repository.DeleteAsync(id);
+            await _projectRepository.DeleteAsync(id);
         }
         catch (Exception ex)
         {

@@ -1,19 +1,28 @@
 using Business.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
 public class ProjectWizardController : Controller
 {
-    public IProjectService _projectService { get; set; }
+    private readonly IProjectService _projectService;
 
     public ProjectWizardController(IProjectService projectService)
     {
         _projectService = projectService;
     }
 
-    public IActionResult Step1()
+    //first step of creating a project
+    [HttpGet]
+    public Task AddProject(Project project)
+    {
+        return _projectService.AddProjectAsync(project);
+    }
+    public IActionResult CreateProject()
     {
         return View();
     }
+    
+    
 }

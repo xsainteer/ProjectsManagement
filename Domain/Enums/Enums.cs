@@ -1,4 +1,4 @@
-namespace Database.Models;
+namespace Domain.Enums;
 
 public enum Status
 {
