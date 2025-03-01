@@ -8,8 +8,8 @@ public interface IGenericRepository<T> where T : class
     Task<T?> GetByIdAsync(int id);
     Task<List<T>> GetAllAsync(bool asNoTracking = false);
     Task AddAsync(T entity);
-    Task Update(T entity);
-    Task UpdateChangedFields(T entity);
+    Task UpdateAsync(T entity);
+    Task UpdateChangedFieldsAsync(T entity);
     Task DeleteAsync(int id);
 }
 
@@ -45,9 +45,10 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var entityId = _context.Entry(entity).Property("id").CurrentValue;
         _logger.LogInformation("Adding new {Entity}:{Id}", typeof(T).Name, entityId);
         await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync();
     }
 
-    public Task Update(T entity)
+    public async Task UpdateAsync(T entity)
     {
         _logger.LogInformation("Updating {Entity}", typeof(T).Name);
 
@@ -60,11 +61,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         }
 
         entry.State = EntityState.Modified;
-
-        return Task.CompletedTask;
+        
+        await _context.SaveChangesAsync();
     }
 
-    public Task UpdateChangedFields(T entity)
+    public async Task UpdateChangedFieldsAsync(T entity)
     {
 
         var entry = _context.Entry(entity);
@@ -87,8 +88,8 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
                 _logger.LogInformation("Modified property {Property} for {Entity}:{Id}", property.Metadata.Name, typeof(T).Name, entityId);
             }
         }
-
-        return Task.CompletedTask;
+        
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
@@ -102,5 +103,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         _logger.LogInformation("Deleting {Entity}:{Id}", typeof(T).Name, id);
         _dbSet.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

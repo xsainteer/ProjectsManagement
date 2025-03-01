@@ -13,12 +13,7 @@ public class ProjectWizardController : Controller
         _projectService = projectService;
     }
 
-    //first step of creating a project
-    [HttpGet]
-    public Task AddProject(Project project)
-    {
-        return _projectService.AddProjectAsync(project);
-    }
+    //the whole wizard frontend implementation
     public IActionResult CreateProject()
     {
         return View();
