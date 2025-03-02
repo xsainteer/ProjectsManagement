@@ -1,23 +1,24 @@
 using Business.Services;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
 public class ProjectWizardController : Controller
 {
-    private readonly IProjectService _projectService;
+    private readonly IWizardService _wizardService;
 
-    public ProjectWizardController(IProjectService projectService)
+    public ProjectWizardController(IWizardService projectService)
     {
-        _projectService = projectService;
+        _wizardService = projectService;
     }
 
-    //the whole wizard frontend implementation
-    public IActionResult CreateProject()
+    public IActionResult FillProjectProps()
     {
         return View();
     }
-    
-    
+
+    public IActionResult CreateCompanies()
+    {
+        return View();
+    }
 }

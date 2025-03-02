@@ -22,7 +22,7 @@ namespace Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Data.Entities.Company", b =>
+            modelBuilder.Entity("Domain.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,40 @@ namespace Data.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("Data.Entities.Employee", b =>
+            modelBuilder.Entity("Domain.Entities.Document", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Document");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +98,7 @@ namespace Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("Data.Entities.EmployeeProject", b =>
+            modelBuilder.Entity("Domain.Entities.EmployeeProject", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
@@ -80,7 +113,7 @@ namespace Data.Migrations
                     b.ToTable("EmployeeProject");
                 });
 
-            modelBuilder.Entity("Data.Entities.Project", b =>
+            modelBuilder.Entity("Domain.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,7 +156,7 @@ namespace Data.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Data.Entities.ProjectTask", b =>
+            modelBuilder.Entity("Domain.Entities.ProjectTask", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,9 +198,20 @@ namespace Data.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Data.Entities.Employee", b =>
+            modelBuilder.Entity("Domain.Entities.Document", b =>
                 {
-                    b.HasOne("Data.Entities.Company", "Company")
+                    b.HasOne("Domain.Entities.Project", "Project")
+                        .WithMany("Documents")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Employee", b =>
+                {
+                    b.HasOne("Domain.Entities.Company", "Company")
                         .WithMany("Employees")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -176,15 +220,15 @@ namespace Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Data.Entities.EmployeeProject", b =>
+            modelBuilder.Entity("Domain.Entities.EmployeeProject", b =>
                 {
-                    b.HasOne("Data.Entities.Employee", "Employee")
+                    b.HasOne("Domain.Entities.Employee", "Employee")
                         .WithMany("EmployeeProjects")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Project", "Project")
+                    b.HasOne("Domain.Entities.Project", "Project")
                         .WithMany("EmployeeProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -195,23 +239,23 @@ namespace Data.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Data.Entities.Project", b =>
+            modelBuilder.Entity("Domain.Entities.Project", b =>
                 {
-                    b.HasOne("Data.Entities.Company", "ClientCompany")
+                    b.HasOne("Domain.Entities.Company", "ClientCompany")
                         .WithMany("ProjectsAsClient")
                         .HasForeignKey("ClientCompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Company", "ExecutorCompany")
+                    b.HasOne("Domain.Entities.Company", "ExecutorCompany")
                         .WithMany("ProjectsAsExecutor")
                         .HasForeignKey("ExecutorCompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Employee", "Supervisor")
+                    b.HasOne("Domain.Entities.Employee", "Supervisor")
                         .WithOne()
-                        .HasForeignKey("Data.Entities.Project", "SupervisorId")
+                        .HasForeignKey("Domain.Entities.Project", "SupervisorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ClientCompany");
@@ -221,21 +265,21 @@ namespace Data.Migrations
                     b.Navigation("Supervisor");
                 });
 
-            modelBuilder.Entity("Data.Entities.ProjectTask", b =>
+            modelBuilder.Entity("Domain.Entities.ProjectTask", b =>
                 {
-                    b.HasOne("Data.Entities.Employee", "Author")
+                    b.HasOne("Domain.Entities.Employee", "Author")
                         .WithMany("TasksAsAuthor")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Employee", "Executor")
+                    b.HasOne("Domain.Entities.Employee", "Executor")
                         .WithMany("TasksAsExecutor")
                         .HasForeignKey("ExecutorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Project", "Project")
+                    b.HasOne("Domain.Entities.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -248,7 +292,7 @@ namespace Data.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("Data.Entities.Company", b =>
+            modelBuilder.Entity("Domain.Entities.Company", b =>
                 {
                     b.Navigation("Employees");
 
@@ -257,7 +301,7 @@ namespace Data.Migrations
                     b.Navigation("ProjectsAsExecutor");
                 });
 
-            modelBuilder.Entity("Data.Entities.Employee", b =>
+            modelBuilder.Entity("Domain.Entities.Employee", b =>
                 {
                     b.Navigation("EmployeeProjects");
 
@@ -266,8 +310,10 @@ namespace Data.Migrations
                     b.Navigation("TasksAsExecutor");
                 });
 
-            modelBuilder.Entity("Data.Entities.Project", b =>
+            modelBuilder.Entity("Domain.Entities.Project", b =>
                 {
+                    b.Navigation("Documents");
+
                     b.Navigation("EmployeeProjects");
 
                     b.Navigation("Tasks");

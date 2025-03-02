@@ -90,6 +90,14 @@ public class AppDbContext : DbContext
         
         //task relationships - end
         
+        //document - project
+        
+        modelBuilder.Entity<Document>()
+            .HasOne<Project>(d => d.Project)
+            .WithMany(p => p.Documents)
+            .HasForeignKey(d => d.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         //no need to include company relationships
     }
 }
