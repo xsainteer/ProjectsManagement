@@ -1,39 +1,21 @@
  @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model Domain.ViewModels.WizardViewModel;
+@model Domain.Entities.Project;
 
 <form asp-action="FillProjectProps" method="post">
     <div id = "ProjectForm">
-        <label asp-for="Project.Name">Project Name</label>
-        <input asp-for="Project.Name" />
+        <label asp-for="Name">Project Name</label>
+        <input asp-for="Name" />
     
-        <label asp-for="Project.StartDate">Start Date</label>
-        <input asp-for="Project.StartDate" type="date" />
+        <label asp-for="StartDate">Start Date</label>
+        <input asp-for="StartDate" type="date" />
     
-        <label asp-for="Project.EndDate">End Date</label>
-        <input asp-for="Project.EndDate" type="date" />
+        <label asp-for="EndDate">End Date</label>
+        <input asp-for="EndDate" type="date" />
     
-        <label asp-for="Project.Priority">Priority</label>
-        <input asp-for="Project.Priority" />
+        <label asp-for="Priority">Priority</label>
+        <input asp-for="Priority" />
         
-        <button class="moveToNextSection">Next</button>
-    </div>
-
-    <div id = "ClientCompanyForm">
-        <label asp-for="ClientCompany.Name">Client Company Name</label>
-        <input asp-for="ClientCompany.Name" />
-
-        <div id="employeesContainer">
-            <div class="employee-fields">
-                <label>Employee 1</label>
-                <input asp-for="ClientCompany.Employees[0].Name" placeholder="Employee Name" />
-                <input asp-for="ClientCompany.Employees[0].Speciality" placeholder="Speciality" />
-            </div>
-        </div>
-
-        <button type="button" id="addEmployee">Add Employee</button>
-        @* TODO *@
-        @* Employee's number increment system, AddEmployee method, Showing already added employees *@
-        <button class="moveToNextSection">Next</button>
+        <button type="submit" class="moveToNextSection">Next</button>
     </div>
 </form>
 <script>
