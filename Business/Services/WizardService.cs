@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using Data.Repositories;
 using Domain.Entities;
 using Domain.ViewModels;
@@ -8,6 +9,8 @@ public interface IWizardService
 {
     void FillProjectProps(Project project);
     void FillCompanyProps(Company company);
+    List<Employee> GetEmployeesByQuery(string query);
+    
 }
 
 public class WizardService : IWizardService
@@ -31,5 +34,16 @@ public class WizardService : IWizardService
     public void FillCompanyProps(Company company)
     {
         _sessionService.SetSessionData("CompanyProps", company);
+    }
+
+    public List<Employee> GetEmployeesByQuery(string query)
+    {
+        var employees = _sessionService.GetSessionData<Company>("CompanyProps")
+            .Employees
+            .Where(e => e.Name.Contains(query))
+            .Take(10)
+            .ToList();
+
+        return employees;
     }
 }

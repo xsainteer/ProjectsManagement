@@ -1,0 +1,128 @@
+ @using Microsoft.AspNetCore.Mvc.TagHelpers;
+ 
+ @* TODO now i need to think about how server will get the data *@
+
+ <form asp-action="SelectSupervisorAndExecutors" method="post">
+    <div id = "SupervisorAndExecutorsForm">
+        <label for="employeeSearch">Search employee:</label>
+        <input type="text" id="employeeSearch" placeholder="Enter Employee Name..."/>
+        
+        <h4>Supervisor</h4>
+        <ul id="supervisorPlaceholder"></ul>
+        
+        <h5>Executors</h5>
+        <ul id="executorsPlaceholder"></ul>
+        
+        <ul id="employeeResults"></ul>
+        
+        <button type="submit">Next</button>
+    </div>
+</form>
+<script>
+    let supervisor;
+
+    let executors = [];
+    
+    let resultsContainer = document.getElementById("employeeResults");
+    resultsContainer.innerHTML = ""; 
+    
+    let executorsPlaceholder = document.getElementById("executorsPlaceholder");
+    executorsPlaceholder.innerHTML = "";
+    
+    let supervisorPlaceholder = document.getElementById("supervisorPlaceholder");
+    supervisorPlaceholder.innerHTML = "";
+    
+    document.getElementById("employeeSearch").addEventListener("input", function() {
+        let query = this.value;
+        
+        fetch(`/ProjectWizard/SearchEmployeesByQuery?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                
+                
+                data.forEach(employee => {
+                    let li = document.createElement("li");
+                    li.textContent = `${employee.name} - ${employee.speciality}`;
+                    
+                    li.addEventListener("click", function() {
+                        document.getElementById("employeeSearch").value = employee.name;
+                        resultsContainer.innerHTML = ""; 
+                    });
+                    
+                   
+                    let selectSupervisorButton = document.createElement("button");
+                    selectSupervisorButton.textContent = "Select as a supervisor";
+                    
+                    selectSupervisorButton.addEventListener("click", function(event) {
+                        event.stopPropagation();
+                        if (!supervisor)
+                        {
+                            supervisor = employee;
+                            let li = document.createElement("li");
+                            
+                            li.textContent = `${employee.name} - ${employee.speciality}`;
+                            let deleteButton = document.createElement("button");
+
+                            deleteButton.textContent = "Delete";
+
+                            deleteButton.addEventListener("click", function(event) {
+                                event.stopPropagation();
+
+                                supervisor = null;
+
+                                li.remove();
+                            });
+                            
+                            li.appendChild(deleteButton);
+                            supervisorPlaceholder.appendChild(li);
+                        }
+                        else
+                        {
+                            alert("Supervisor is already selected");
+                        }
+                    });
+                    
+
+                    let selectExecutorButton = document.createElement("button");
+                    selectExecutorButton.textContent = "Select as an executor";
+                    
+                    selectExecutorButton.addEventListener("click", function(event) {
+                        event.stopPropagation();
+                        if (employee.id === supervisor.id)
+                        {
+                            alert("the employee is selected as a supervisor");
+                        }
+                        else if (executors.some(executor => executor.id === employee.id))
+                        {
+                            alert("the employee is already added as an executor")
+                        }
+                        else
+                        {
+                            executors.push(employee);
+                            let li = document.createElement("li");
+                            li.textContent = `${employee.name} - ${employee.speciality}`;
+                            let deleteButton = document.createElement("button");
+                            
+                            deleteButton.textContent = "Delete";
+                            
+                            deleteButton.addEventListener("click", function(event) {
+                                event.stopPropagation();
+                                
+                                executors = executors.filter(executor => executor.id !== employee.id);
+                                    
+                                li.remove();
+                            });
+                            
+                            li.appendChild(deleteButton);
+                            executorsPlaceholder.appendChild(li);
+                        }
+                    });
+
+                    li.appendChild(selectSupervisorButton);
+                    li.appendChild(selectExecutorButton);
+                    resultsContainer.appendChild(li);
+                });
+            });
+    });
+
+</script>

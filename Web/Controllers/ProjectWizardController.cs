@@ -45,11 +45,16 @@ public class ProjectWizardController : Controller
 
         _wizardService.FillCompanyProps(clientCompany);
 
-        return RedirectToAction("SelectSupervisor");
+        return RedirectToAction("SelectSupervisorAndExecutors");
     }
 
-    public IActionResult SelectSupervisor()
+    public IActionResult SelectSupervisorAndExecutors()
     {
         return View();
+    }
+
+    public JsonResult SearchEmployeesByQuery(string query)
+    {
+        return Json(_wizardService.GetEmployeesByQuery(query));
     }
 }
