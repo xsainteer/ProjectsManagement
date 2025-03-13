@@ -12,6 +12,9 @@
         
         <h5>Executors</h5>
         <ul id="executorsPlaceholder"></ul>
+
+        <input type="hidden" name="supervisor" id="hiddenSupervisor">
+        <input type="hidden" name="executors" id="hiddenExecutors">
         
         <ul id="employeeResults"></ul>
         
@@ -31,6 +34,23 @@
     
     let supervisorPlaceholder = document.getElementById("supervisorPlaceholder");
     supervisorPlaceholder.innerHTML = "";
+    
+    document.getElementById("SupervisorAndExecutorsForm").addEventListener("submit", function (event) {
+        if (!supervisor) {
+            alert("Please select a supervisor before proceeding.");
+            event.preventDefault();
+            return;
+        }
+
+        if (executors.length === 0) {
+            alert("Please select at least one executor.");
+            event.preventDefault();
+            return;
+        }
+
+        document.getElementById("hiddenSupervisor").value = JSON.stringify(supervisor);
+        document.getElementById("hiddenExecutors").value = JSON.stringify(executors);
+    });
     
     document.getElementById("employeeSearch").addEventListener("input", function() {
         let query = this.value;

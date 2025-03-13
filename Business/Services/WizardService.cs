@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using Data.Repositories;
 using Domain.Entities;
@@ -10,7 +11,7 @@ public interface IWizardService
     void FillProjectProps(Project project);
     void FillCompanyProps(Company company);
     List<Employee> GetEmployeesByQuery(string query);
-    
+    void SaveSupervisorAndExecutors(string jsonSupervisor, string jsonExecutors);
 }
 
 public class WizardService : IWizardService
@@ -45,5 +46,14 @@ public class WizardService : IWizardService
             .ToList();
 
         return employees;
+    }
+
+    public void SaveSupervisorAndExecutors(string jsonSupervisor, string jsonExecutors)
+    {
+        var supervisor = JsonSerializer.Deserialize<Employee>(jsonSupervisor);
+        var executors = JsonSerializer.Deserialize<List<Employee>>(jsonExecutors);
+
+        _sessionService.SetSessionData("Supervisor", supervisor);
+        _sessionService.SetSessionData("Executors", executors);
     }
 }

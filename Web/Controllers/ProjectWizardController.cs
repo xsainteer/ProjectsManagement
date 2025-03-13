@@ -1,6 +1,5 @@
 using Business.Services;
 using Domain.Entities;
-using Domain.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
@@ -52,6 +51,16 @@ public class ProjectWizardController : Controller
     {
         return View();
     }
+
+    [HttpPost]
+    public IActionResult SelectSupervisorAndExecutors(string jsonSupervisor, string jsonExecutors)
+    {
+        _wizardService.SaveSupervisorAndExecutors(jsonSupervisor, jsonExecutors);
+        return RedirectToAction("SelectSupervisorAndExecutors");
+    }
+    
+    
+    
 
     public JsonResult SearchEmployeesByQuery(string query)
     {
