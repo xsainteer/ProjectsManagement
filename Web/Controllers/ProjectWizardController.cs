@@ -25,7 +25,7 @@ public class ProjectWizardController : Controller
         {
             return View(project);
         }
-        _wizardService.FillProjectProps(project);
+        _wizardService.SaveProjectProps(project);
         return RedirectToAction("FillCompanyProps");
     }
 
@@ -42,7 +42,7 @@ public class ProjectWizardController : Controller
             return View(clientCompany);
         }
 
-        _wizardService.FillCompanyProps(clientCompany);
+        _wizardService.SaveCompanyProps(clientCompany);
 
         return RedirectToAction("SelectSupervisorAndExecutors");
     }

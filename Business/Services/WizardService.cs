@@ -8,8 +8,8 @@ namespace Business.Services;
 
 public interface IWizardService
 {
-    void FillProjectProps(Project project);
-    void FillCompanyProps(Company company);
+    void SaveProjectProps(Project project);
+    void SaveCompanyProps(Company company);
     List<Employee> GetEmployeesByQuery(string query);
     void SaveSupervisorAndExecutors(string jsonSupervisor, string jsonExecutors);
 }
@@ -27,12 +27,12 @@ public class WizardService : IWizardService
     }
 
     //stores project properties' values in session
-    public void FillProjectProps(Project project)
+    public void SaveProjectProps(Project project)
     {
         _sessionService.SetSessionData("ProjectProps", project);
     }
 
-    public void FillCompanyProps(Company company)
+    public void SaveCompanyProps(Company company)
     {
         _sessionService.SetSessionData("CompanyProps", company);
     }
