@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Business.Services;
 
-namespace Web.Extensions;
+namespace API.Extensions;
 
 public class SessionService : ISessionService
 {

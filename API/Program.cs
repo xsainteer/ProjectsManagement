@@ -3,7 +3,7 @@ using Data;
 using Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Web.Extensions;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
