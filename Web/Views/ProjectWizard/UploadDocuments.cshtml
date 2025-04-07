@@ -1,0 +1,83 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers;
+
+<form asp-action="UploadDocuments" id="uploadForm" method="post">
+    <div id="dropArea">
+        <p>Drag & Drop files here or click to select</p>
+        <input type="file" id="fileInput" multiple hidden>
+    </div>
+    
+    <ul id="fileList"></ul>
+    
+    <button type="submit">Upload</button>
+</form>
+<script>
+    const dropArea = document.getElementById("dropArea");
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+    let files = [];
+
+    dropArea.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", handleFiles);
+
+    dropArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropArea.classList.add("highlight");
+    });
+
+    dropArea.addEventListener("dragleave", () => dropArea.classList.remove("highlight"));
+
+    dropArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropArea.classList.remove("highlight");
+        handleFiles(e.dataTransfer);
+    });
+
+    function handleFiles(data) {
+        const newFiles = [...data.files || data.target.files];
+        files = files.concat(newFiles);
+        renderFileList();
+    }
+
+    function renderFileList() {
+        fileList.innerHTML = "";
+        files.forEach((file, index) => {
+            let li = document.createElement("li");
+            li.textContent = file.name;
+            let deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "X";
+            deleteBtn.addEventListener("click", () => {
+                files.splice(index, 1);
+                renderFileList();
+            });
+            li.appendChild(deleteBtn);
+            fileList.appendChild(li);
+        });
+    }
+
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (files.length === 0) {
+            alert("No files selected!");
+            return;
+        }
+
+        let formData = new FormData();
+        files.forEach(file => formData.append("files", file));
+
+        try {
+            let response = await fetch("/ProjectWizard/UploadDocuments", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                files = [];
+            } else {
+                alert("Upload failed.");
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+        }
+    });
+</script>

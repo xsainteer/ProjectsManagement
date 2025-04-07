@@ -1,0 +1,61 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Domain.Entities.Company;
+
+<form asp-action="FillClientCompanyProps" method="post">
+    <div id = "ClientCompanyForm">
+        <label asp-for="Name">Client Company Name</label>
+        <input asp-for="Name" />
+
+        
+    </div>
+    <div id="ClientCompanyEmployeesForm">
+        <label>Name</label>
+        <input type="text" id="employeeName" />
+
+        <label>Speciality</label>
+        <input type="text" id="employeeSpeciality" />
+
+        <button type="button" id="addEmployee">Add employee</button>
+    </div>
+    
+    <div id="employeesShown"></div>
+    
+    <div id="employeesContainer"></div>
+    
+    <button type="submit">Next</button>
+</form>
+<script>
+    document.getElementById("addEmployee").addEventListener("click", function() {
+        let name = document.getElementById("employeeName").value;
+        let speciality = document.getElementById("employeeSpeciality").value;
+
+        if (!name || !speciality) {
+            alert("Fill out all fields");
+            return;
+        }
+
+        let container = document.getElementById("employeesContainer");
+        let index = container.children.length / 2;
+
+        let inputName = document.createElement("input");
+        inputName.type = "hidden";
+        inputName.name = `Employees[${index}].Name`; 
+        inputName.value = name;
+
+        let inputSpeciality = document.createElement("input");
+        inputSpeciality.type = "hidden";
+        inputSpeciality.name = `Employees[${index}].Speciality`; 
+        inputSpeciality.value = speciality;
+
+        container.appendChild(inputName);
+        container.appendChild(inputSpeciality);
+
+        let shownContainer = document.getElementById("employeesShown");
+        let li = document.createElement("li");
+        li.textContent = `${name} - ${speciality}`;
+        shownContainer.appendChild(li);
+
+        document.getElementById("employeeName").value = "";
+        document.getElementById("employeeSpeciality").value = "";
+    });
+</script>

@@ -1,14 +1,14 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Domain.Entities.Company;
 
-<form asp-action="FillCompanyProps" method="post">
-    <div id = "ClientCompanyForm">
-        <label asp-for="Name">Client Company Name</label>
+<form asp-action="FillExecutorCompanyProps" method="post">
+    <div id = "ExecutorCompanyForm">
+        <label asp-for="Name">Executor Company Name</label>
         <input asp-for="Name" />
 
         
     </div>
-    <div id="ClientCompanyEmployeesForm">
+    <div id="ExecutorCompanyEmployeesForm">
         <label>Name</label>
         <input type="text" id="employeeName" />
 
