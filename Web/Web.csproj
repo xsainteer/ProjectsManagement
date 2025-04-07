@@ -20,11 +20,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\uploads\" />
+      <Folder Include="Controllers\" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="wwwroot\js\FillProjectProps.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
+      <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
     </ItemGroup>
 
 </Project>
