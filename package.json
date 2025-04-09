@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/xsainteer/ProjectsManagement/issues"
   },
-  "homepage": "https://github.com/xsainteer/ProjectsManagement#readme"
+  "homepage": "https://github.com/xsainteer/ProjectsManagement#readme",
+  "dependencies": {
+    "bootstrap-vue": "^2.23.1"
+  }
 }
