@@ -19,9 +19,9 @@ public class AppDbContext : DbContext
     {
         //project - executor company
         modelBuilder.Entity<Project>()
-            .HasOne(p => p.ExecutorCompany)
+            .HasOne(p => p.ContractorCompany)
             .WithMany(c => c.ProjectsAsExecutor)
-            .HasForeignKey(p => p.ExecutorCompanyId)
+            .HasForeignKey(p => p.ContractorCompanyId)
             .OnDelete(DeleteBehavior.Restrict);
         
         //project - client company
