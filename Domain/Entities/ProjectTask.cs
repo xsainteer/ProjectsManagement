@@ -4,16 +4,16 @@ namespace Domain.Entities;
 
 public class ProjectTask
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     
-    public int AuthorId { get; set; }
+    public Guid AuthorId { get; set; }
     public Employee Author { get; set; }
     
-    public int ExecutorId { get; set; }
+    public Guid ExecutorId { get; set; }
     public Employee Executor { get; set; }
     
-    public int ProjectId { get; set; }
+    public Guid ProjectId { get; set; }
     public Project Project { get; set; }
     
     public string Comment { get; set; }

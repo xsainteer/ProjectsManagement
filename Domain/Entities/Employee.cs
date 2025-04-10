@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class Employee
 {
-    public int Id { get; set; }
+    public int Guid { get; set; }
     
     [Required(ErrorMessage = "Employee name is required")]
     public string Name { get; set; }
@@ -16,6 +16,6 @@ public class Employee
     
     public List<EmployeeProject> EmployeeProjects { get; set; } = new();
     
-    public int CompanyId { get; set; }
+    public Guid CompanyId { get; set; }
     public Company Company { get; set; }
 }

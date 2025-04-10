@@ -5,17 +5,17 @@ namespace Domain.Entities;
 
 public class Project
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     
     public string Name { get; set; } = null!;
     
-    public int ClientCompanyId { get; set; }
+    public Guid ClientCompanyId { get; set; }
     public Company ClientCompany { get; set; } = null!;
     
-    public int ContractorCompanyId { get; set; }
+    public Guid ContractorCompanyId { get; set; }
     public Company ContractorCompany { get; set; } = null!;
     
-    public int? SupervisorId { get; set; }
+    public Guid SupervisorId { get; set; }
     public Employee? Supervisor { get; set; } = null!;
     
     public List<EmployeeProject> EmployeeProjects { get; set; } = new();
