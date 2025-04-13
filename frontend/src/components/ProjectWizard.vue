@@ -123,32 +123,6 @@
   </div>
 
   <div v-if="activeStep === 3">
-    <el-form-item label="Manager">
-      <el-select
-          v-model="form.managerId"
-          filterable
-          remote
-          reserve-keyword
-          placeholder="Search by name"
-          :remote-method="(query) => searchEmployees('contractor', query)"
-          :loading="loading"
-      >
-        <el-option
-            v-for="employee in filteredEmployees"
-            :key="employee.id"
-            :label="employee.name"
-            :value="employee.id"
-        />
-      </el-select>
-      <div v-if="form.managerId">
-        <p>Chosen manager:
-          {{ form.contractorCompanyStaff.find(e => e.id === form.managerId)?.name }}
-        </p>
-      </div>
-    </el-form-item>
-  </div>
-
-  <div v-if="activeStep === 4">
     <el-form-item label="Performers">
       <el-select
           v-model="form.performersId"
@@ -192,6 +166,32 @@
     </el-table>
   </div>
 
+  <div v-if="activeStep === 4">
+    <el-form-item label="Manager">
+      <el-select
+          v-model="form.managerId"
+          filterable
+          remote
+          reserve-keyword
+          placeholder="Search by name"
+          :remote-method="(query) => searchEmployees('contractor', query)"
+          :loading="loading"
+      >
+        <el-option
+              v-for="employee in filteredEmployees"
+            :key="employee.id"
+            :label="employee.name"
+            :value="employee.id"
+        />
+      </el-select>
+      <div v-if="form.managerId">
+        <p>Chosen manager:
+          {{ form.contractorCompanyStaff.find(e => e.id === form.managerId)?.name }}
+        </p>
+      </div>
+    </el-form-item>
+  </div>
+
   <div v-if="activeStep === 5">
     <div
         class="upload-container"
@@ -230,17 +230,18 @@
 
   <div class="mt-4 flex justify-between">
     <el-button @click="prevStep" :disabled="activeStep === 0">Back</el-button>
-    <el-button type="primary" @click="nextStep">
-      {{ activeStep === steps.length - 1 ? 'Finish' : 'Next' }}
-    </el-button>
+    <el-button v-if="activeStep < 5" type="primary" @click="nextStep">Next</el-button>
+    <el-button v-if="activeStep === 5" type="primary">Finish</el-button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import axios from 'axios'
+import {v4 as uuidv4} from 'uuid'
 
 const activeStep = ref(0)
-const steps = ['Project Information', 'Client Company', 'Contractor Company', 'Supervisor selection', 'Performers', 'Documents']
+const steps = ['Project Information', 'Client Company', 'Contractor Company', 'Performers', 'Supervisor selection', 'Documents']
 
 const form = ref({
   projectName: '',
@@ -254,6 +255,75 @@ const form = ref({
   clientCompanyStaff: [],
   contractorCompanyStaff: []
 })
+
+const UploadForm = async () => 
+{
+  const companiesIds = await UploadCompaniesAsync()
+  
+  const employeesIds = await UploadEmployeesAsync(companiesIds)
+}
+
+async function UploadProjectsAsync(companiesIds)
+{
+  const project =
+      {
+        Name: form.value.projectName,
+        StartDate: form.value.startDate,
+        EndDate: form.value.endDate,
+        Priority: form.value.priority,
+        ClientCompanyId: companiesIds[0],
+        ContractorCompanyId: companiesIds[1],
+        PerformersIds: form.value.performersId,
+        ManagerId: kglaf
+      }
+  
+  await axios.post('/api/projects', project)
+}
+
+async function UploadEmployeesAsync(companiesResponse) {
+  const clientEmployees = form.value.clientCompanyStaff.map(employee => {
+    return {
+      Id: employee.id,
+      Name: employee.name,
+      Speciality: employee.speciality,
+      CompanyId: companiesResponse[0]
+    }
+  })
+
+  const contractorEmployees = form.value.contractorCompanyStaff.map(employee => {
+    return {
+      Id: employee.id,
+      Name: employee.name,
+      Speciality: employee.speciality,
+      CompanyId: companiesResponse[1]
+    }
+  })
+  
+  const clientEmployeesResponse = await axios.post('/api/employees/bulk', clientEmployees)
+  const contractorEmployeesResponse = await axios.post('/api/employees/bulk', contractorEmployees)
+}
+
+async function UploadCompaniesAsync() {
+  let clCompany =
+      {
+        Id: uuidv4(),
+        Name: form.value.clientCompany,
+        Employees: form.value.clientCompanyStaff
+      }
+
+  let contCompany =
+      {
+        Id: uuidv4(),
+        Name: form.value.contractorCompany,
+        Employees: form.value.contractorCompanyStaff
+      }
+  
+  await axios.post('/api/companies', clCompany)
+  await axios.post('/api/companies', contCompany)
+
+  return [clCompany.Id, clCompany.Id]
+}
+
 
 const fileList = ref([])
 const isDragging = ref(false)
@@ -292,12 +362,10 @@ const loading = ref(false)
 const newClientEmployee = ref({ name: '', speciality: '' })
 const newContractorEmployee = ref({ name: '', speciality: '' })
 
-let clientEmployeeCounter = 1
-let contractorEmployeeCounter = 1 
 
 function addEmployee(target) {
   const employee = {
-    id: target === 'client' ? clientEmployeeCounter : contractorEmployeeCounter,
+    id: uuidv4(),
     name: target === 'client' ? newClientEmployee.value.name : newContractorEmployee.value.name,
     speciality: target === 'client' ? newClientEmployee.value.speciality : newContractorEmployee.value.speciality,
     isEditing: false,
@@ -305,11 +373,9 @@ function addEmployee(target) {
 
   if (target === 'client') {
     form.value.clientCompanyStaff.push(employee)
-    clientEmployeeCounter += 1
     newClientEmployee.value = { name: '', speciality: '' }
   } else {
     form.value.contractorCompanyStaff.push(employee)
-    contractorEmployeeCounter += 1
     newContractorEmployee.value = { name: '', speciality: '' }
   }
 }
