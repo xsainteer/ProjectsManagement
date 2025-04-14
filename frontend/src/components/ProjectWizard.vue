@@ -260,24 +260,51 @@ const UploadForm = async () =>
 {
   const companiesIds = await UploadCompaniesAsync()
   
-  const employeesIds = await UploadEmployeesAsync(companiesIds)
+  await UploadEmployeesAsync(companiesIds)
+  
+  const projectId = await UploadProjectAsync(companiesIds)
+  
+  await UploadFilesAsync(projectId)
 }
 
-async function UploadProjectsAsync(companiesIds)
+async function UploadFilesAsync(projectId)
 {
+  const formData = new FormData()
+  
+  formData.append('projectId', projectId)
+  
+  fileList.value.forEach(file => {
+    formData.append('files', file)
+  })
+
+  await axios.post('/api/documents/bulk', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+async function UploadProjectAsync(companiesIds)
+{
+  const projectId = uuidv4()
   const project =
       {
+        Id: projectId,
         Name: form.value.projectName,
         StartDate: form.value.startDate,
         EndDate: form.value.endDate,
         Priority: form.value.priority,
         ClientCompanyId: companiesIds[0],
-        ContractorCompanyId: companiesIds[1],
-        PerformersIds: form.value.performersId,
-        ManagerId: kglaf
+        ContractorCompanyId: companiesIds[1], 
+        SupervisorId: form.value.managerId,
+        EmployeeProjects: form.value.performersId.map(id => ({
+          EmployeeId: id,
+          ProjectId: projectId
+        }))
       }
   
   await axios.post('/api/projects', project)
+  
+  return projectId
 }
 
 async function UploadEmployeesAsync(companiesResponse) {
@@ -307,15 +334,13 @@ async function UploadCompaniesAsync() {
   let clCompany =
       {
         Id: uuidv4(),
-        Name: form.value.clientCompany,
-        Employees: form.value.clientCompanyStaff
+        Name: form.value.clientCompany
       }
 
   let contCompany =
       {
         Id: uuidv4(),
-        Name: form.value.contractorCompany,
-        Employees: form.value.contractorCompanyStaff
+        Name: form.value.contractorCompany
       }
   
   await axios.post('/api/companies', clCompany)
