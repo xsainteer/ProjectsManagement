@@ -25,7 +25,7 @@ public class Project
     public DateTime EndDate { get; set; }
     
     public List<ProjectTask> Tasks { get; set; } = new();
-    public List<Document> Documents { get; set; } = new();
+    public List<ProjectDocument> Documents { get; set; } = new();
     
     public Priority Priority { get; set; }
 }

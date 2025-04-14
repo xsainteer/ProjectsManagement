@@ -25,7 +25,7 @@ public class GenericService<T> : IGenericService<T> where T : class
     }
 
     
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
         try
         {
@@ -43,12 +43,12 @@ public class GenericService<T> : IGenericService<T> where T : class
     {
         try
         {
-            var projects = await _repository.GetAllAsync();
-            if (projects.Count == 0)
+            var entities = await _repository.GetAllAsync();
+            if (entities.Count == 0)
             {
-                _logger.LogInformation("No projects found");
+                _logger.LogInformation("No {Entity} entities found", typeof(T).Name);
             }
-            return projects;
+            return entities;
         }
         catch (Exception ex)
         {
@@ -63,6 +63,7 @@ public class GenericService<T> : IGenericService<T> where T : class
         try
         {
             await _repository.AddAsync(entity);
+            await _repository.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -77,6 +78,7 @@ public class GenericService<T> : IGenericService<T> where T : class
         try
         {
             await _repository.UpdateAsync(entity);
+            await _repository.SaveChangesAsync();
         }
         catch (Exception ex)
         {
@@ -91,6 +93,7 @@ public class GenericService<T> : IGenericService<T> where T : class
         try
         {
             await _repository.DeleteAsync(id);
+            await _repository.SaveChangesAsync();
         }
         catch (Exception ex)
         {

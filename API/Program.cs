@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //DI container 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+builder.Services.AddScoped(typeof(EmployeeService));
 
 var app = builder.Build();
 

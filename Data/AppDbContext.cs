@@ -92,7 +92,7 @@ public class AppDbContext : DbContext
         
         //document - project
         
-        modelBuilder.Entity<Document>()
+        modelBuilder.Entity<ProjectDocument>()
             .HasOne<Project>(d => d.Project)
             .WithMany(p => p.Documents)
             .HasForeignKey(d => d.ProjectId)

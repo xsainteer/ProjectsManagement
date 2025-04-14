@@ -11,6 +11,7 @@ public interface IGenericRepository<T> where T : class
     Task UpdateAsync(T entity);
     Task UpdateChangedFieldsAsync(T entity);
     Task DeleteAsync(int id);
+    Task SaveChangesAsync();
 }
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -103,6 +104,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         _logger.LogInformation("Deleting {Entity}:{Id}", typeof(T).Name, id);
         _dbSet.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task SaveChangesAsync()
+    {
         await _context.SaveChangesAsync();
     }
 }

@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class Employee
 {
-    public int Guid { get; set; }
+    public Guid Id { get; set; }
     
     [Required(ErrorMessage = "Employee name is required")]
     public string Name { get; set; }

@@ -39,7 +39,7 @@ namespace Data.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Document", b =>
+            modelBuilder.Entity("Domain.Entities.ProjectDocument", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,7 +69,7 @@ namespace Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Document");
+                    b.ToTable("ProjectDocument");
                 });
 
             modelBuilder.Entity("Domain.Entities.Employee", b =>
@@ -198,7 +198,7 @@ namespace Data.Migrations
                     b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Document", b =>
+            modelBuilder.Entity("Domain.Entities.ProjectDocument", b =>
                 {
                     b.HasOne("Domain.Entities.Project", "Project")
                         .WithMany("Documents")
