@@ -11,7 +11,7 @@ public class CompaniesController : ControllerBase
     private readonly IGenericService<Company> _companyService;
     private readonly ILogger<CompaniesController> _logger;
 
-    public CompaniesController(GenericService<Company> companyService, ILogger<CompaniesController> logger)
+    public CompaniesController(IGenericService<Company> companyService, ILogger<CompaniesController> logger)
     {
         _companyService = companyService;
         _logger = logger;

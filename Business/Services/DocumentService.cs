@@ -1,4 +1,3 @@
-using Data;
 using Data.Repositories;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
@@ -7,9 +6,9 @@ using Business.DTOs;
 
 namespace Business.Services;
 
-public abstract class DocumentService : GenericService<ProjectDocument>
+public class DocumentService : GenericService<ProjectDocument>
 {
-    protected DocumentService(IGenericRepository<ProjectDocument> repository, ILogger<GenericService<ProjectDocument>> logger) : base(repository, logger)
+    public DocumentService(IGenericRepository<ProjectDocument> repository, ILogger<GenericService<ProjectDocument>> logger) : base(repository, logger)
     {
     }
 

@@ -231,7 +231,7 @@
   <div class="mt-4 flex justify-between">
     <el-button @click="prevStep" :disabled="activeStep === 0">Back</el-button>
     <el-button v-if="activeStep < 5" type="primary" @click="nextStep">Next</el-button>
-    <el-button v-if="activeStep === 5" type="primary">Finish</el-button>
+    <el-button v-if="activeStep === 5" type="primary" @click="UploadForm">Finish</el-button>
   </div>
 </template>
 
@@ -256,6 +256,8 @@ const form = ref({
   contractorCompanyStaff: []
 })
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const UploadForm = async () => 
 {
   const companiesIds = await UploadCompaniesAsync()
@@ -277,7 +279,7 @@ async function UploadFilesAsync(projectId)
     formData.append('files', file)
   })
 
-  await axios.post('/api/documents/bulk', formData, {
+  await axios.post(`${apiUrl}/api/documents/bulk`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -302,7 +304,7 @@ async function UploadProjectAsync(companiesIds)
         }))
       }
   
-  await axios.post('/api/projects', project)
+  await axios.post(`${apiUrl}/api/projects`, project)
   
   return projectId
 }
@@ -326,8 +328,8 @@ async function UploadEmployeesAsync(companiesResponse) {
     }
   })
   
-  const clientEmployeesResponse = await axios.post('/api/employees/bulk', clientEmployees)
-  const contractorEmployeesResponse = await axios.post('/api/employees/bulk', contractorEmployees)
+  const clientEmployeesResponse = await axios.post(`${apiUrl}/api/employees/bulk`, clientEmployees)
+  const contractorEmployeesResponse = await axios.post(`${apiUrl}/api/employees/bulk`, contractorEmployees)
 }
 
 async function UploadCompaniesAsync() {
@@ -343,8 +345,8 @@ async function UploadCompaniesAsync() {
         Name: form.value.contractorCompany
       }
   
-  await axios.post('/api/companies', clCompany)
-  await axios.post('/api/companies', contCompany)
+  await axios.post(`${apiUrl}/api/companies`, clCompany)
+  await axios.post(`${apiUrl}/api/companies`, contCompany)
 
   return [clCompany.Id, clCompany.Id]
 }
