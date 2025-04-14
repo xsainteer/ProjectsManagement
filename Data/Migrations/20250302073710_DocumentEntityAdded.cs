@@ -11,7 +11,7 @@ namespace Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Document",
+                name: "ProjectDocument",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -35,7 +35,7 @@ namespace Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Document_ProjectId",
-                table: "Document",
+                table: "ProjectDocument",
                 column: "ProjectId");
         }
 
@@ -43,7 +43,7 @@ namespace Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Document");
+                name: "ProjectDocument");
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace Domain.Entities;
 
-public class Document
+public class ProjectDocument
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
