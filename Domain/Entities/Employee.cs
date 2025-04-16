@@ -4,18 +4,20 @@ namespace Domain.Entities;
 
 public class Employee
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     
-    [Required(ErrorMessage = "Employee name is required")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
-    [Required(ErrorMessage = "Employee speciality is required")]
     public string Speciality { get; set; }
-    public List<ProjectTask>? TasksAsAuthor { get; set; }
-    public List<ProjectTask>? TasksAsExecutor { get; set; }
+
+    public List<ProjectTask>? TasksAsAuthor { get; set; } = [];
+    public List<ProjectTask>? TasksAsExecutor { get; set; } = [];
     
     public List<EmployeeProject> EmployeeProjects { get; set; } = new();
     
-    public Guid CompanyId { get; set; }
-    public Company Company { get; set; }
+    public Guid? SupervisedProjectId { get; set; }
+    public Project SupervisedProject { get; set; } = null!;
+    
+    public Guid? CompanyId { get; set; }
+    public Company Company { get; set; } = null!;
 }

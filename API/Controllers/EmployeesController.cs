@@ -1,5 +1,7 @@
-using Business.Services;
+using API.DTOs;
+using API.Mappers;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -8,10 +10,10 @@ namespace API.Controllers;
 [Route("/api/[controller]")]
 public class EmployeesController : ControllerBase
 {
-    private readonly EmployeeService _employeeService;
+    private readonly IEmployeeService _employeeService;
     private readonly ILogger<EmployeesController> _logger;
 
-    public EmployeesController(EmployeeService employeeService, ILogger<EmployeesController> logger)
+    public EmployeesController(IEmployeeService employeeService, ILogger<EmployeesController> logger)
     {
         _employeeService = employeeService;
         _logger = logger;
@@ -41,7 +43,7 @@ public class EmployeesController : ControllerBase
     }
     
     [HttpPost("bulk")]
-    public async Task<IActionResult> CreateEmployees([FromBody] List<Employee> employees)
+    public async Task<IActionResult> CreateEmployees([FromBody] List<CreateEmployeeDto> dtos)
     {
         if (!ModelState.IsValid)
         {
@@ -50,13 +52,16 @@ public class EmployeesController : ControllerBase
 
         try
         {
+            var employees = dtos.Select(EmployeeMapper.ToEmployee).ToList();
+            
             await _employeeService.CreateEmployeesAsync(employees);
+            
+            return Ok(new {ids = employees.Select(e => e.Id)});
         }
         catch (Exception e)
         {
             _logger.LogError("Error while creating employees: {ErrorMessage}", e.Message);
             return StatusCode(500, new {message = "An error occurred while creating employees"});
         }
-        return Ok();
     }
 }

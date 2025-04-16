@@ -1,5 +1,7 @@
-using Business.DTOs;
-using Business.Services;
+using API.DTOs;
+using API.Mappers;
+using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -8,38 +10,39 @@ namespace API.Controllers;
 [Route("/api/[controller]")]
 public class DocumentsController : ControllerBase
 {
-    private readonly DocumentService _documentService;
+    private readonly IDocumentService _documentService;
     private readonly ILogger<DocumentsController> _logger;
+    private readonly IFileStorageService _fileStorageService;
 
-    public DocumentsController(DocumentService documentService, ILogger<DocumentsController> logger)
+    public DocumentsController(IDocumentService documentService, ILogger<DocumentsController> logger, IFileStorageService fileStorageService)
     {
         _documentService = documentService;
         _logger = logger;
+        _fileStorageService = fileStorageService;
     }
 
     [HttpPost("bulk")]
-    public async Task<IActionResult> CreateDocuments([FromForm] List<IFormFile> files, [FromForm] Guid projectId)
+    public async Task<IActionResult> CreateDocuments([FromForm] List<CreateDocumentDto> dtos)
     {
-        var documentDtos = files.Select(file => new DocumentDto
+        if (!ModelState.IsValid)
         {
-            Name = file.FileName,
-            FilePath = Path.Combine("uploads", file.FileName),
-            ContentType = file.ContentType,
-            FileSize = file.Length,
-            ProjectId = projectId,
-            Stream = file.OpenReadStream()
-        }).ToList();
+            return BadRequest(ModelState);
+        }
 
         try
         {
-            await _documentService.CreateDocuments(documentDtos);
+            
+            var documents = dtos.Select(ProjectDocumentMapper.ToProjectDocument).ToList();
+            await _documentService.CreateDocumentsAsync(documents);
+            var documentFiles = dtos.Select(DocumentFileMapper.ToDocumentFile).ToList();
+            await _fileStorageService.SaveFilesAsync(documentFiles);
+            
+            return Ok(new {ids = documents.Select(x => x.Id)});
         }
         catch (Exception e)
         {
-            _logger.LogError("Error while creating documents: {ErrorMessage}", e.Message);
-            return StatusCode(500, new {message = "An error occured while creating documents"});
+            _logger.LogError("Error creating documents: {Message}", e.Message);
+            throw;
         }
-        
-        return Ok();
     }
 }

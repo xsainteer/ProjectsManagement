@@ -1,16 +1,7 @@
-using Data.Repositories;
+using Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Business.Services;
-
-public interface IGenericService<T> where T : class
-{
-    Task<T?> GetByIdAsync(int id);
-    Task<List<T>> GetAllAsync();
-    Task AddAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task DeleteAsync(int id);
-}
 
 public class GenericService<T> : IGenericService<T> where T : class
 {

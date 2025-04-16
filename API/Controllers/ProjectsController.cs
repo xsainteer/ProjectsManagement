@@ -1,5 +1,8 @@
+using API.DTOs;
+using AutoMapper;
 using Business.Services;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -10,34 +13,36 @@ public class ProjectsController : ControllerBase
 {
     private readonly IGenericService<Project> _projectService;
     private readonly ILogger<ProjectsController> _logger;
-
-    public ProjectsController(IGenericService<Project> projectService, ILogger<ProjectsController> logger)
+    private readonly IMapper _mapper;
+    
+    public ProjectsController(IGenericService<Project> projectService, ILogger<ProjectsController> logger, IMapper mapper)
     {
         _projectService = projectService;
         _logger = logger;
+        _mapper = mapper;
     }
-
-    // there is no reason to use DTO when creating a project
-    // because we are not sending any data to the client and every property of the
-    // frontend project is already in the project entity
+    
+    
     [HttpPost]
-    public async Task<IActionResult> CreateProject([FromBody] Project project)
+    public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
     {
         if(!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-
+        
         try
         {
+            var project = _mapper.Map<Project>(dto);
+            
             await _projectService.AddAsync(project);
+
+            return Ok(new {id = project.Id});
         }
         catch (Exception e)
         {
             _logger.LogError("Error while creating project: {ErrorMessage}", e.Message);
             return StatusCode(500, new {message = "An error occurred while creating the project"});
         }
-        
-        return Ok();
     }
 }

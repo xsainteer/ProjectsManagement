@@ -1,18 +1,8 @@
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Data.Repositories;
-
-public interface IGenericRepository<T> where T : class
-{
-    Task<T?> GetByIdAsync(int id);
-    Task<List<T>> GetAllAsync(bool asNoTracking = false);
-    Task AddAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task UpdateChangedFieldsAsync(T entity);
-    Task DeleteAsync(int id);
-    Task SaveChangesAsync();
-}
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
@@ -43,10 +33,15 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public async Task AddAsync(T entity)
     {
-        var entityId = _context.Entry(entity).Property("id").CurrentValue;
+        var entityId = _context.Entry(entity).Property("Id").CurrentValue;
         _logger.LogInformation("Adding new {Entity}:{Id}", typeof(T).Name, entityId);
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+    }
+    
+    public async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        _logger.LogInformation("Adding new {Entity} records", typeof(T).Name);
+        await _dbSet.AddRangeAsync(entities);
     }
 
     public async Task UpdateAsync(T entity)
@@ -62,8 +57,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         }
 
         entry.State = EntityState.Modified;
-        
-        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateChangedFieldsAsync(T entity)
@@ -89,8 +82,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
                 _logger.LogInformation("Modified property {Property} for {Entity}:{Id}", property.Metadata.Name, typeof(T).Name, entityId);
             }
         }
-        
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)
@@ -104,7 +95,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
         _logger.LogInformation("Deleting {Entity}:{Id}", typeof(T).Name, id);
         _dbSet.Remove(entity);
-        await _context.SaveChangesAsync();
     }
     
     public async Task SaveChangesAsync()

@@ -125,10 +125,11 @@
   <div v-if="activeStep === 3">
     <el-form-item label="Performers">
       <el-select
-          v-model="form.performersId"
           filterable
           multiple
           remote
+          :reserve-keyword="false"
+          @update:modelValue="setPerformers"
           placeholder="Search by name"
           :remote-method="(query) => searchEmployees('contractor', query)"
           :loading="loading"
@@ -141,26 +142,19 @@
         />
       </el-select>
     </el-form-item>
-    
-    <el-table :data="form.performersId">
-      <el-table-column prop="name" label="Name">
-        <template #default="{ row }">
-          {{form.contractorCompanyStaff.find(e => e.id === row)?.name}}
-        </template>  
-      </el-table-column>
 
-      <el-table-column prop="speciality" label="Speciality">
-        <template #default="{ row }">
-          {{form.contractorCompanyStaff.find(e => e.id === row)?.speciality}}
-        </template>
-      </el-table-column>
-
+    <el-table :data="performers">
+      <el-table-column prop="name" label="Name" />
+      <el-table-column prop="speciality" label="Speciality" />
       <el-table-column label="Actions" width="160">
         <template #default="{ row }">
-          <el-button size="small" type="danger" 
-                     @click="
-                       form.performersId = form.performersId.filter(id => id !== row)
-                     ">Delete</el-button>
+          <el-button
+              size="small"
+              type="danger"
+              @click="removePerformer(row.id)"
+          >
+            Delete
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -169,10 +163,10 @@
   <div v-if="activeStep === 4">
     <el-form-item label="Manager">
       <el-select
-          v-model="form.managerId"
+          model-value="Manager"
           filterable
           remote
-          reserve-keyword
+          @update:modelValue="setManager"
           placeholder="Search by name"
           :remote-method="(query) => searchEmployees('contractor', query)"
           :loading="loading"
@@ -181,12 +175,12 @@
               v-for="employee in filteredEmployees"
             :key="employee.id"
             :label="employee.name"
-            :value="employee.id"
+            :value="employee"
         />
       </el-select>
-      <div v-if="form.managerId">
+      <div v-if="manager">
         <p>Chosen manager:
-          {{ form.contractorCompanyStaff.find(e => e.id === form.managerId)?.name }}
+          {{ manager.name }}
         </p>
       </div>
     </el-form-item>
@@ -236,9 +230,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import axios from 'axios'
-import {v4 as uuidv4} from 'uuid'
 
 const activeStep = ref(0)
 const steps = ['Project Information', 'Client Company', 'Contractor Company', 'Performers', 'Supervisor selection', 'Documents']
@@ -250,11 +243,36 @@ const form = ref({
   priority: '',
   clientCompany: '',
   contractorCompany: '',
-  managerId: '',
-  performersId: [],
   clientCompanyStaff: [],
   contractorCompanyStaff: []
 })
+
+const manager = computed(() => 
+    form.value.contractorCompanyStaff.find(e => e.isManager)
+)
+
+function setManager(selectedEmployee) {
+  form.value.contractorCompanyStaff.forEach(e => e.isManager = false)
+
+  const match = form.value.contractorCompanyStaff.find(e => e.id === selectedEmployee.id)
+  if (match) match.isManager = true
+}
+
+const performers = computed(() =>
+    form.value.contractorCompanyStaff.filter(e => e.isPerformer)
+)
+function setPerformers(selectedEmployeesIds) {
+  
+  selectedEmployeesIds.forEach(selectedId => {
+    const match = form.value.contractorCompanyStaff.find(e => e.id === selectedId)
+    if (match) match.isPerformer = true
+  })
+}
+
+function removePerformer(id) {
+  const match = form.value.contractorCompanyStaff.find(e => e.id === id)
+  if (match) match.isPerformer = false
+}
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -262,9 +280,9 @@ const UploadForm = async () =>
 {
   const companiesIds = await UploadCompaniesAsync()
   
-  await UploadEmployeesAsync(companiesIds)
-  
   const projectId = await UploadProjectAsync(companiesIds)
+  
+  await UploadEmployeesAsync(companiesIds, projectId)
   
   await UploadFilesAsync(projectId)
 }
@@ -272,11 +290,10 @@ const UploadForm = async () =>
 async function UploadFilesAsync(projectId)
 {
   const formData = new FormData()
-  
-  formData.append('projectId', projectId)
-  
-  fileList.value.forEach(file => {
-    formData.append('files', file)
+
+  fileList.value.forEach((file, index) => {
+    formData.append(`dtos[${index}].File`, file);
+    formData.append(`dtos[${index}].ProjectId`, projectId);
   })
 
   await axios.post(`${apiUrl}/api/documents/bulk`, formData, {
@@ -287,68 +304,64 @@ async function UploadFilesAsync(projectId)
 }
 async function UploadProjectAsync(companiesIds)
 {
-  const projectId = uuidv4()
   const project =
       {
-        Id: projectId,
         Name: form.value.projectName,
         StartDate: form.value.startDate,
         EndDate: form.value.endDate,
         Priority: form.value.priority,
         ClientCompanyId: companiesIds[0],
-        ContractorCompanyId: companiesIds[1], 
-        SupervisorId: form.value.managerId,
-        EmployeeProjects: form.value.performersId.map(id => ({
-          EmployeeId: id,
-          ProjectId: projectId
-        }))
+        ContractorCompanyId: companiesIds[1]
       }
-  
-  await axios.post(`${apiUrl}/api/projects`, project)
-  
-  return projectId
+
+  const projectResponse = await axios.post(`${apiUrl}/api/projects`, project)
+  return await projectResponse.data.id
 }
 
-async function UploadEmployeesAsync(companiesResponse) {
+async function UploadEmployeesAsync(companiesIds, projectId) {
   const clientEmployees = form.value.clientCompanyStaff.map(employee => {
     return {
-      Id: employee.id,
       Name: employee.name,
       Speciality: employee.speciality,
-      CompanyId: companiesResponse[0]
+      CompanyId: companiesIds[0],
+      IsPerformer: employee.isPerformer,
+      IsManager: employee.isManager,
+      ProjectId: projectId
     }
   })
 
   const contractorEmployees = form.value.contractorCompanyStaff.map(employee => {
     return {
-      Id: employee.id,
       Name: employee.name,
       Speciality: employee.speciality,
-      CompanyId: companiesResponse[1]
+      CompanyId: companiesIds[1],
+      IsPerformer: employee.isPerformer,
+      IsManager: employee.isManager,
+      ProjectId: projectId
     }
   })
   
   const clientEmployeesResponse = await axios.post(`${apiUrl}/api/employees/bulk`, clientEmployees)
   const contractorEmployeesResponse = await axios.post(`${apiUrl}/api/employees/bulk`, contractorEmployees)
+  
+  return [clientEmployeesResponse.data, contractorEmployeesResponse.data]
 }
 
 async function UploadCompaniesAsync() {
   let clCompany =
       {
-        Id: uuidv4(),
         Name: form.value.clientCompany
       }
 
   let contCompany =
       {
-        Id: uuidv4(),
         Name: form.value.contractorCompany
       }
   
-  await axios.post(`${apiUrl}/api/companies`, clCompany)
-  await axios.post(`${apiUrl}/api/companies`, contCompany)
+  const clientCompanyResponse = await axios.post(`${apiUrl}/api/companies`, clCompany)
+  const contractorCompanyResponse = await axios.post(`${apiUrl}/api/companies`, contCompany)
 
-  return [clCompany.Id, clCompany.Id]
+  return [clientCompanyResponse.data.id, contractorCompanyResponse.data.id]
 }
 
 
@@ -390,19 +403,25 @@ const newClientEmployee = ref({ name: '', speciality: '' })
 const newContractorEmployee = ref({ name: '', speciality: '' })
 
 
+let clientEmployeeCounter = 0
+let contractorEmployeeCounter = 0
+
 function addEmployee(target) {
   const employee = {
-    id: uuidv4(),
+    id: target === 'client' ? clientEmployeeCounter : contractorEmployeeCounter,
     name: target === 'client' ? newClientEmployee.value.name : newContractorEmployee.value.name,
     speciality: target === 'client' ? newClientEmployee.value.speciality : newContractorEmployee.value.speciality,
     isEditing: false,
+    isPerformer: false
   }
 
   if (target === 'client') {
     form.value.clientCompanyStaff.push(employee)
+    clientEmployeeCounter++
     newClientEmployee.value = { name: '', speciality: '' }
   } else {
     form.value.contractorCompanyStaff.push(employee)
+    contractorEmployeeCounter++
     newContractorEmployee.value = { name: '', speciality: '' }
   }
 }

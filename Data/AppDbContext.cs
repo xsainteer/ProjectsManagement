@@ -34,7 +34,7 @@ public class AppDbContext : DbContext
         //project - supervisor
         modelBuilder.Entity<Project>()
             .HasOne(p => p.Supervisor)
-            .WithOne()
+            .WithOne(e => e.SupervisedProject)
             .HasForeignKey<Project>(p => p.SupervisorId)
             .OnDelete(DeleteBehavior.Restrict);
         

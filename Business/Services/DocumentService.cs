@@ -1,48 +1,31 @@
-using Data.Repositories;
 using Domain.Entities;
 using Microsoft.Extensions.Logging;
-using Business.DTOs;
+using Domain.Interfaces;
 
 
 namespace Business.Services;
 
-public class DocumentService : GenericService<ProjectDocument>
+public class DocumentService : GenericService<ProjectDocument>, IDocumentService
 {
-    public DocumentService(IGenericRepository<ProjectDocument> repository, ILogger<GenericService<ProjectDocument>> logger) : base(repository, logger)
+    private readonly IFileStorageService _fileStorageService;
+    public DocumentService(IGenericRepository<ProjectDocument> repository, ILogger<GenericService<ProjectDocument>> logger, IFileStorageService fileStorageService)
+        : base(repository, logger)
     {
+        _fileStorageService = fileStorageService;
     }
 
-    public async Task CreateDocuments(List<DocumentDto> documentDtos)
+    public async Task CreateDocumentsAsync(List<ProjectDocument> documents)
     {
-        foreach (var documentDto in documentDtos)
+        try
         {
-            await using var fileStream = new FileStream(documentDto.FilePath, FileMode.Create);
-            await documentDto.Stream.CopyToAsync(fileStream);
-        }
-        
-        var documents = documentDtos.Select(dto => new ProjectDocument
-        {
-            Id = Guid.NewGuid(),
-            Name = dto.Name,
-            FilePath = dto.FilePath,
-            ContentType = dto.ContentType,
-            FileSize = dto.FileSize,
-            ProjectId = dto.ProjectId
-        }).ToList();
-
-        foreach (var document in documents)
-        {
-            try
-            {
-                await _repository.AddAsync(document);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError("Error while creating document: {ErrorMessage}", e.Message);
-                throw;
-            }
-            _logger.LogInformation("Document {DocumentId} has been created", document.Id);
+            await _repository.AddRangeAsync(documents);
+            
             await _repository.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 }

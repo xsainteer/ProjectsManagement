@@ -8,6 +8,6 @@ public class ProjectDocument
     public string ContentType { get; set; }
     public long FileSize { get; set; }
     
-    public Guid ProjectId { get; set; }
-    public Project Project { get; set; }
+    public Guid? ProjectId { get; set; }
+    public Project Project { get; set; } = null!;
 }
