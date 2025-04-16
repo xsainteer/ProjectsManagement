@@ -5,20 +5,20 @@
 
   <div v-if="activeStep === 0">
     <el-form :model="form">
-      <el-form-item label="Название проекта">
+      <el-form-item label="Project name">
         <el-input v-model="form.projectName" />
       </el-form-item>
-      <el-form-item label="Дата начала">
+      <el-form-item label="Start date">
         <el-date-picker v-model="form.startDate" type="date" />
       </el-form-item>
-      <el-form-item label="Дата окончания">
+      <el-form-item label="End date">
         <el-date-picker v-model="form.endDate" type="date" />
       </el-form-item>
-      <el-form-item label="Приоритет">
-        <el-select v-model="form.priority" placeholder="Выберите приоритет">
-          <el-option label="Высокий" value="3" />
-          <el-option label="Средний" value="2" />
-          <el-option label="Низкий" value="1" />
+      <el-form-item label="Priority">
+        <el-select v-model="form.priority" placeholder="Choose priority">
+          <el-option label="High" value="3" />
+          <el-option label="Medium" value="2" />
+          <el-option label="Low" value="1" />
         </el-select>
       </el-form-item>
     </el-form>
