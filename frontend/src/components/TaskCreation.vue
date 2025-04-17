@@ -124,10 +124,10 @@ const apiUrl = import.meta.env.VITE_API_URL
   
 function resetForm()
 {
-  taskName.value = ''
-  taskStatus.value = ''
-  priority.value = ''
-  taskDescription.value = ''
+  taskName.value = null
+  taskStatus.value = null
+  priority.value = null
+  taskDescription.value = null
   selectedProject.value = null
   selectedAssigner.value = null
   selectedAssignee.value = null
@@ -138,6 +138,18 @@ function resetForm()
 
 async function submitTask()
 {
+  if(!taskName.value ||
+      !taskDescription.value ||
+      !selectedProject.value ||
+      !selectedAssigner.value ||
+      !selectedAssignee.value ||
+      !taskComment.value ||
+      !priority.value ||
+      !taskStatus.value
+  ) {  
+    alert("Please fill in all required fields")
+    return
+  }
   loading.value = true;
   try{
     const task = {

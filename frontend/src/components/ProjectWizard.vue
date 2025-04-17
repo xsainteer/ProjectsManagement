@@ -286,6 +286,28 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 const UploadForm = async () => 
 {
+  if(
+      !form.value.projectName
+      || !form.value.startDate || 
+      !form.value.endDate || 
+      !form.value.priority || 
+      !form.value.clientCompany ||
+      !form.value.contractorCompany) {
+    alert("Please fill all fields")
+    return
+  }
+  if(
+      form.value.clientCompanyStaff.length === 0 ||
+      form.value.contractorCompanyStaff.length === 0) {
+    alert("Please add employees")
+    return
+  }
+  
+  if(!performers.value || !manager.value)
+  {
+    alert("please select performers and a manager")
+    return
+  }
   const companiesIds = await UploadCompaniesAsync()
   
   const projectId = await UploadProjectAsync(companiesIds)
@@ -299,12 +321,12 @@ const UploadForm = async () =>
 
 function resetForm()
 {
-  form.value.projectName = ''
-  form.value.startDate = ''
-  form.value.endDate = ''
-  form.value.priority = ''
-  form.value.clientCompany = ''
-  form.value.contractorCompany = ''
+  form.value.projectName = null
+  form.value.startDate = null
+  form.value.endDate = null
+  form.value.priority = null
+  form.value.clientCompany = null
+  form.value.contractorCompany = null
   form.value.clientCompanyStaff = []
   form.value.contractorCompanyStaff = []
   performers.value = []
