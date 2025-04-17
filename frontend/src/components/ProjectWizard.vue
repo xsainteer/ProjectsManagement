@@ -225,7 +225,8 @@
   <div class="mt-4 flex justify-between">
     <el-button @click="prevStep" :disabled="activeStep === 0">Back</el-button>
     <el-button v-if="activeStep < 5" type="primary" @click="nextStep">Next</el-button>
-    <el-button
+    <el-button 
+        v-if="activeStep === 5"
         type="primary"
         @click="UploadForm"
         :loading="loading"

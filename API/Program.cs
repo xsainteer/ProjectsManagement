@@ -1,3 +1,4 @@
+using API.Extensions;
 using API.Mappers;
 using Business.Configuration;
 using Business.Services;
@@ -15,18 +16,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 //DI container 
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-builder.Services.AddScoped(typeof(EmployeeService));
-builder.Services.AddScoped(typeof(DocumentService));
-builder.Services.AddControllers();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddScoped(typeof(IEmployeeService), typeof(EmployeeService));
-builder.Services.AddScoped(typeof(IDocumentService), typeof(DocumentService));
-builder.Services.AddScoped(typeof(IFileStorageService), typeof(FileStorageService));
-builder.Services.Configure<FileStorageSettings>(builder.Configuration.GetSection("FileStorageSettings"));
-builder.Services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
+builder.Services.AddCustomServices(builder.Configuration);
 
+//swagger
 builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen(options =>
 {
