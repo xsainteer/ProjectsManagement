@@ -6,8 +6,10 @@ namespace Business.Services;
 
 public class EmployeeService : GenericService<Employee>, IEmployeeService
 {
-    public EmployeeService(IGenericRepository<Employee> repository, ILogger<GenericService<Employee>> logger) : base(repository, logger)
+    private readonly IEmployeeRepository _employeeRepository;
+    public EmployeeService(IGenericRepository<Employee> repository, ILogger<GenericService<Employee>> logger, IEmployeeRepository employeeRepository) : base(repository, logger)
     {
+        _employeeRepository = employeeRepository;
     }
 
     public async Task CreateEmployeesAsync(List<Employee> employees)
@@ -25,5 +27,13 @@ public class EmployeeService : GenericService<Employee>, IEmployeeService
         
         _logger.LogInformation("Employees created successfully");
         await _repository.SaveChangesAsync();
+    }
+
+    public async Task<List<Employee>> GetAllByProjectIdAsync(
+        Guid projectId, int skip = 0, int count = 10, bool asNoTracking = false, string query = "")
+    {
+        var employees = await _employeeRepository.GetAllByProjectIdAsync(projectId, skip, count, asNoTracking);
+
+        return employees;
     }
 }

@@ -1,9 +1,11 @@
 using API.DTOs;
 using AutoMapper;
 using Business.Services;
+using Data;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -43,6 +45,21 @@ public class ProjectsController : ControllerBase
         {
             _logger.LogError("Error while creating project: {ErrorMessage}", e.Message);
             return StatusCode(500, new {message = "An error occurred while creating the project"});
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllProjects([FromQuery] string? query, int skip = 0, int count = 10)
+    {
+        try
+        {
+            var projects = await _projectService.GetAllAsync(skip, count, true, query);
+            return Ok(projects);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error while getting all projects: {ErrorMessage}", e.Message);
+            throw;
         }
     }
 }

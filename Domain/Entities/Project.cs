@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Enums;
+using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Project
+public class Project : INameable
 {
     public Guid Id { get; set; }
     

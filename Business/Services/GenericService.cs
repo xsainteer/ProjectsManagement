@@ -30,11 +30,11 @@ public class GenericService<T> : IGenericService<T> where T : class
     }
 
     
-    public async Task<List<T>> GetAllAsync()
+    public async Task<List<T>> GetAllAsync(int skip, int count, bool asNoTracking = false, string query = "")
     {
         try
         {
-            var entities = await _repository.GetAllAsync();
+            var entities = await _repository.GetAllAsync(skip, count, asNoTracking, query);
             if (entities.Count == 0)
             {
                 _logger.LogInformation("No {Entity} entities found", typeof(T).Name);

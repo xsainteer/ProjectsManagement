@@ -1,7 +1,6 @@
 <template>
-  <ProjectWizard />
+  <router-view />
 </template>
 
 <script setup>
-import ProjectWizard from './components/ProjectWizard.vue'
 </script>

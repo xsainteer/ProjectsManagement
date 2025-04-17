@@ -19,29 +19,6 @@ public class EmployeesController : ControllerBase
         _logger = logger;
     }
     
-    // there is no reason to use DTO when creating a project
-    // because we are not sending any data to the client and every property of the
-    // frontend project is already in the project entity
-    [HttpPost]
-    public async Task<IActionResult> CreateEmployee([FromBody] Employee employee)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        try
-        {
-            await _employeeService.AddAsync(employee);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Error while creating employee: {ErrorMessage}", e.Message);
-            return StatusCode(500, new {message = "An error occurred while creating the employee"});
-        }
-        return Ok();
-    }
-    
     [HttpPost("bulk")]
     public async Task<IActionResult> CreateEmployees([FromBody] List<CreateEmployeeDto> dtos)
     {
@@ -62,6 +39,26 @@ public class EmployeesController : ControllerBase
         {
             _logger.LogError("Error while creating employees: {ErrorMessage}", e.Message);
             return StatusCode(500, new {message = "An error occurred while creating employees"});
+        }
+    }
+    
+    public async Task<IActionResult> GetEmployeesByProjectId(
+        [FromQuery] Guid projectId, 
+        [FromQuery] string query = "",
+        [FromQuery] int skip = 0, 
+        [FromQuery] int count = 10)
+    {
+        try
+        {
+            var employees = await _employeeService
+                .GetAllByProjectIdAsync(projectId, skip, count, true, query);
+            
+            return Ok(employees);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Error while fetching employees: {ErrorMessage}", e.Message);
+            return StatusCode(500, new {message = "An error occurred while fetching employees"});
         }
     }
 }

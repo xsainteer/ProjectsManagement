@@ -25,6 +25,7 @@ builder.Services.AddScoped(typeof(IEmployeeService), typeof(EmployeeService));
 builder.Services.AddScoped(typeof(IDocumentService), typeof(DocumentService));
 builder.Services.AddScoped(typeof(IFileStorageService), typeof(FileStorageService));
 builder.Services.Configure<FileStorageSettings>(builder.Configuration.GetSection("FileStorageSettings"));
+builder.Services.AddScoped(typeof(IEmployeeRepository), typeof(EmployeeRepository));
 
 builder.Services.AddEndpointsApiExplorer(); 
 builder.Services.AddSwaggerGen(options =>

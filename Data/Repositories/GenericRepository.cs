@@ -4,11 +4,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class GenericRepository<T> : IGenericRepository<T> where T : class, INameable
 {
-    private readonly AppDbContext _context;
-    private readonly DbSet<T> _dbSet;
-    private readonly ILogger<GenericRepository<T>> _logger;
+    protected readonly AppDbContext _context;
+    protected readonly DbSet<T> _dbSet;
+    protected readonly ILogger<GenericRepository<T>> _logger;
 
     public GenericRepository(AppDbContext context, ILogger<GenericRepository<T>> logger)
     {
@@ -23,12 +23,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<List<T>> GetAllAsync(bool asNoTracking = false)
+    public async Task<List<T>> GetAllAsync(int skip, int count, bool asNoTracking = false, string query = "")
     {
         _logger.LogInformation("Fetching all {Entity} records", typeof(T).Name);
-        return asNoTracking
-            ? await _dbSet.AsNoTracking().ToListAsync()
-            : await _dbSet.ToListAsync();
+        var queryable = asNoTracking ? _dbSet.AsNoTracking() : _dbSet;
+        
+        if (!string.IsNullOrWhiteSpace(query))
+        {
+            queryable = queryable.Where(e => e.Name.Contains(query));
+        }
+        
+        return await queryable
+            .Skip(skip)
+            .Take(count)
+            .ToListAsync();
     }
 
     public async Task AddAsync(T entity)

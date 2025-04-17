@@ -31,7 +31,6 @@ public class DocumentsController : ControllerBase
 
         try
         {
-            
             var documents = dtos.Select(ProjectDocumentMapper.ToProjectDocument).ToList();
             await _documentService.CreateDocumentsAsync(documents);
             var documentFiles = dtos.Select(DocumentFileMapper.ToDocumentFile).ToList();

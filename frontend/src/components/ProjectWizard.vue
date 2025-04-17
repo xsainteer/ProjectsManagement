@@ -225,7 +225,14 @@
   <div class="mt-4 flex justify-between">
     <el-button @click="prevStep" :disabled="activeStep === 0">Back</el-button>
     <el-button v-if="activeStep < 5" type="primary" @click="nextStep">Next</el-button>
-    <el-button v-if="activeStep === 5" type="primary" @click="UploadForm">Finish</el-button>
+    <el-button
+        type="primary"
+        @click="UploadForm"
+        :loading="loading"
+        :disabled="loading"
+    >
+      {{ loading ? "Creating..." : "Create project" }}
+    </el-button>
   </div>
 </template>
 
@@ -285,6 +292,24 @@ const UploadForm = async () =>
   await UploadEmployeesAsync(companiesIds, projectId)
   
   await UploadFilesAsync(projectId)
+  
+  resetForm()
+}
+
+function resetForm()
+{
+  form.value.projectName = ''
+  form.value.startDate = ''
+  form.value.endDate = ''
+  form.value.priority = ''
+  form.value.clientCompany = ''
+  form.value.contractorCompany = ''
+  form.value.clientCompanyStaff = []
+  form.value.contractorCompanyStaff = []
+  performers.value = []
+  manager.value = null
+  activeStep.value = 0
+  alert("project created")
 }
 
 async function UploadFilesAsync(projectId)

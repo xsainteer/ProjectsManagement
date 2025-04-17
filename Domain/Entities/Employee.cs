@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Employee
+public class Employee : INameable
 {
     public Guid Id { get; init; }
     

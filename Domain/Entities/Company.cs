@@ -1,6 +1,8 @@
+using Domain.Interfaces;
+
 namespace Domain.Entities;
 
-public class Company
+public class Company : INameable
 {
     public Guid Id { get; set; }
     
