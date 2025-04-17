@@ -51,7 +51,7 @@ docker-compose up -d
 run this in the solution folder:
 
 ```bash
-dotnet ef database update UpdateModels --project Data --startup-project API
+dotnet ef database update --project Data --startup-project API
 ```
 
 ### Configure File Storage Path
