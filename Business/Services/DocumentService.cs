@@ -14,17 +14,19 @@ public class DocumentService : GenericService<ProjectDocument>, IDocumentService
         _fileStorageService = fileStorageService;
     }
 
-    public async Task CreateDocumentsAsync(List<ProjectDocument> documents)
+    public async Task CreateDocumentsAsync(List<ProjectDocument> documents, List<DocumentFile> documentFiles)
     {
         try
         {
             await _repository.AddRangeAsync(documents);
+
+            await _fileStorageService.SaveFilesAsync(documentFiles);
             
             await _repository.SaveChangesAsync();
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Error creating documents: {Message}", e.Message);
             throw;
         }
     }
