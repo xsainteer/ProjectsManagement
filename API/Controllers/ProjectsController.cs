@@ -11,20 +11,17 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class ProjectsController : ControllerBase
+public class ProjectsController : GenericController<Project>
 {
-    private readonly IGenericService<Project> _projectService;
-    private readonly ILogger<ProjectsController> _logger;
-    private readonly IMapper _mapper;
     
-    public ProjectsController(IGenericService<Project> projectService, ILogger<ProjectsController> logger, IMapper mapper)
+    private readonly IMapper _mapper;
+
+
+    public ProjectsController(IGenericService<Project> service, ILogger<GenericController<Project>> logger, IMapper mapper) : base(service, logger)
     {
-        _projectService = projectService;
-        _logger = logger;
         _mapper = mapper;
     }
-    
-    
+
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] CreateProjectDto dto)
     {
@@ -37,7 +34,7 @@ public class ProjectsController : ControllerBase
         {
             var project = _mapper.Map<Project>(dto);
             
-            await _projectService.AddAsync(project);
+            await _service.AddAsync(project);
 
             return Ok(new {id = project.Id});
         }
@@ -48,18 +45,18 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllProjects([FromQuery] string? query, int skip = 0, int count = 10)
-    {
-        try
-        {
-            var projects = await _projectService.GetAllAsync(skip, count, true, query);
-            return Ok(projects);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Error while getting all projects: {ErrorMessage}", e.Message);
-            throw;
-        }
-    }
+    // [HttpGet]
+    // public async Task<IActionResult> GetAllProjects([FromQuery] string? query, int skip = 0, int count = 10)
+    // {
+    //     try
+    //     {
+    //         var projects = await _service.GetAllAsync(skip, count, true, query);
+    //         return Ok(projects);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         _logger.LogError("Error while getting all projects: {ErrorMessage}", e.Message);
+    //         throw;
+    //     }
+    // }
 }

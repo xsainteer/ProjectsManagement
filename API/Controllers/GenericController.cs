@@ -5,8 +5,8 @@ namespace API.Controllers;
 
 public class GenericController<T> : ControllerBase where T : IHasId
 {
-    private readonly ILogger<GenericController<T>> _logger;
-    private readonly IGenericService<T> _service;
+    protected readonly ILogger<GenericController<T>> _logger;
+    protected readonly IGenericService<T> _service;
 
     public GenericController(IGenericService<T> service, ILogger<GenericController<T>> logger)
     {
@@ -27,7 +27,7 @@ public class GenericController<T> : ControllerBase where T : IHasId
         }
         catch (Exception e)
         {
-            _logger.LogError("Error while fetching data: {Message}", e.Message);
+            _logger.LogError("Error while fetching {Type} entities: {Message}",typeof(T).Name, e.Message);
             return StatusCode(500, new {message = "An error occurred while fetching data"});
         }
     }
@@ -42,7 +42,7 @@ public class GenericController<T> : ControllerBase where T : IHasId
         }
         catch (Exception e)
         {
-            _logger.LogError("Error while fetching data: {Message}", e.Message);
+            _logger.LogError("Error while fetching {Type} entities: {Message}",typeof(T).Name, e.Message);
             throw;
         }
     }
@@ -57,7 +57,7 @@ public class GenericController<T> : ControllerBase where T : IHasId
         }
         catch (Exception e)
         {
-            _logger.LogError("Error while deleting data: {Message}", e.Message);
+            _logger.LogError("Error while deleting {Type} entities: {Message}",typeof(T).Name, e.Message);
             throw;
         }
     }

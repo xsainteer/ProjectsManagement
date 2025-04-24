@@ -42,6 +42,7 @@ public class EmployeesController : ControllerBase
         }
     }
     
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetEmployeesByProjectId(
         [FromQuery] Guid projectId, 
         [FromQuery] string query = "",
