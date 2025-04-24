@@ -3,7 +3,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Employee : INameable
+public class Employee : INameable, IHasId
 {
     public Guid Id { get; init; }
     

@@ -3,7 +3,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class ProjectTask : INameable
+public class ProjectTask : INameable, IHasId
 {
     public Guid Id { get; set; }
     public string? Name { get; set; }

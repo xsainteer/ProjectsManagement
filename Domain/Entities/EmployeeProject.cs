@@ -1,6 +1,6 @@
 namespace Domain.Entities;
 
-public class EmployeeProject
+public class EmployeeProject 
 {
     public Guid EmployeeId { get; set; }
     public Employee Employee { get; set; } = null!;

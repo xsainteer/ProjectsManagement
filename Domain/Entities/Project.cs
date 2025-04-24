@@ -4,7 +4,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Project : INameable
+public class Project : INameable, IHasId
 {
     public Guid Id { get; set; }
     

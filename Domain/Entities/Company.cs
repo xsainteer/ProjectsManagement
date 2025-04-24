@@ -2,7 +2,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class Company : INameable
+public class Company : INameable, IHasId
 {
     public Guid Id { get; set; }
     

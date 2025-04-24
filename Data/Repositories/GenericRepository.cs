@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Data.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class, INameable
+public class GenericRepository<T> : IGenericRepository<T> where T : class, INameable, IHasId
 {
     protected readonly AppDbContext _context;
     protected readonly DbSet<T> _dbSet;
@@ -17,7 +17,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IName
         _logger = logger;
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
         _logger.LogInformation("Fetching {Entity}:{Id}", typeof(T).Name, id);
         return await _dbSet.FindAsync(id);
@@ -92,7 +92,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IName
         }
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         var entity = await GetByIdAsync(id);
         if (entity == null)

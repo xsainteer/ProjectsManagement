@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Business.Services;
 
-public class GenericService<T> : IGenericService<T> where T : class
+public class GenericService<T> : IGenericService<T> where T : IHasId
 {
     protected readonly IGenericRepository<T> _repository;
     protected readonly ILogger<GenericService<T>> _logger;
@@ -16,7 +16,7 @@ public class GenericService<T> : IGenericService<T> where T : class
     }
 
     
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
         try
         {
@@ -30,16 +30,21 @@ public class GenericService<T> : IGenericService<T> where T : class
     }
 
     
-    public async Task<List<T>> GetAllAsync(int skip, int count, bool asNoTracking = false, string query = "")
+    public async Task<List<T>?> GetAllAsync(int skip, int count, bool asNoTracking = false, string? query = "")
     {
         try
         {
-            var entities = await _repository.GetAllAsync(skip, count, asNoTracking, query);
-            if (entities.Count == 0)
+            if (query != null)
             {
-                _logger.LogInformation("No {Entity} entities found", typeof(T).Name);
+                var entities = await _repository.GetAllAsync(skip, count, asNoTracking, query);
+                if (entities.Count == 0)
+                {
+                    _logger.LogInformation("No {Entity} entities found", typeof(T).Name);
+                    return entities;
+                }
             }
-            return entities;
+
+            return null;
         }
         catch (Exception ex)
         {
@@ -79,7 +84,7 @@ public class GenericService<T> : IGenericService<T> where T : class
     }
 
     
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Guid id)
     {
         try
         {

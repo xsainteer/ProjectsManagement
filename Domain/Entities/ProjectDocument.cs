@@ -2,7 +2,7 @@ using Domain.Interfaces;
 
 namespace Domain.Entities;
 
-public class ProjectDocument : INameable
+public class ProjectDocument : INameable, IHasId
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
