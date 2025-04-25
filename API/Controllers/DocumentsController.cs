@@ -8,17 +8,14 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class DocumentsController : ControllerBase
+public class DocumentsController : GenericController<ProjectDocument>
 {
     private readonly IDocumentService _documentService;
-    private readonly ILogger<DocumentsController> _logger;
-    private readonly IFileStorageService _fileStorageService;
 
-    public DocumentsController(IDocumentService documentService, ILogger<DocumentsController> logger, IFileStorageService fileStorageService)
+
+    public DocumentsController(IGenericService<ProjectDocument> service, ILogger<GenericController<ProjectDocument>> logger, IDocumentService documentService) : base(service, logger)
     {
         _documentService = documentService;
-        _logger = logger;
-        _fileStorageService = fileStorageService;
     }
 
     [HttpPost("bulk")]

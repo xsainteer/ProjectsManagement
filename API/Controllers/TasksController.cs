@@ -8,19 +8,16 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class TasksController : ControllerBase
+public class TasksController : GenericController<ProjectTask>
 {
-    private readonly IGenericService<ProjectTask> _genericService;
     private readonly IMapper _mapper;
-    private readonly ILogger<TasksController> _logger;
 
-    public TasksController(IGenericService<ProjectTask> genericService, IMapper mapper, ILogger<TasksController> logger)
+
+    public TasksController(IGenericService<ProjectTask> service, ILogger<GenericController<ProjectTask>> logger, IMapper mapper) : base(service, logger)
     {
-        _genericService = genericService;
         _mapper = mapper;
-        _logger = logger;
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto createTaskDto)
     {
@@ -32,7 +29,7 @@ public class TasksController : ControllerBase
         try
         {
             var projectTask = _mapper.Map<ProjectTask>(createTaskDto);
-            await _genericService.AddAsync(projectTask);
+            await _service.AddAsync(projectTask);
             return Ok(new { id = projectTask.Id });
         }
         catch (Exception e)
