@@ -5,11 +5,13 @@ namespace API.Mappers;
 
 public static class DocumentFileMapper
 {
-    public static DocumentFile ToDocumentFile(this CreateDocumentDto dto)
+    public static async Task<DocumentFile> ToDocumentFile(this CreateDocumentDto dto)
     {
+        using var memoryStream = new MemoryStream();
+        await dto.File.CopyToAsync(memoryStream);
         return new DocumentFile
         {
-            Stream = dto.File.OpenReadStream(),
+            Content = memoryStream.ToArray(),
             FileName = dto.File.FileName
         };
     }

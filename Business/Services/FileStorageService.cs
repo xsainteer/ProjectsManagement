@@ -21,8 +21,7 @@ public class FileStorageService : IFileStorageService
         {
             var filePath = Path.Combine(_settings.FilePath, file.FileName);
             
-            await using var fileStream = new FileStream(filePath, FileMode.Create);
-            await file.Stream.CopyToAsync(fileStream);
-        }
+            await File.WriteAllBytesAsync(filePath, file.Content);
+        }   
     }
 }

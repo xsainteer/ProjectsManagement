@@ -29,7 +29,7 @@ public class DocumentsController : GenericController<ProjectDocument>
         try
         {
             var documents = dtos.Select(ProjectDocumentMapper.ToProjectDocument).ToList();
-            var documentFiles = dtos.Select(DocumentFileMapper.ToDocumentFile).ToList();
+            var documentFiles = (await Task.WhenAll(dtos.Select(dto => dto.ToDocumentFile()))).ToList();
             await _documentService.CreateDocumentsAsync(documents, documentFiles);
             
             return Ok(new {ids = documents.Select(x => x.Id)});
