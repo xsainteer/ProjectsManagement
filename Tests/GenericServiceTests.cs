@@ -31,14 +31,30 @@ public abstract class GenericServiceTests<T> where T : class, IHasId
         // Arrange
         var expectedId = Guid.NewGuid();
         var entity = CreateEntity(expectedId);
-        
         _repository.Setup(repo => repo.GetByIdAsync(expectedId)).ReturnsAsync(entity);
         
+        // Act
         var result = await _service.GetByIdAsync(expectedId);
         
+        // Assert
         Assert.NotNull(result);
         Assert.Equal(expectedId, result.Id);
     }
+    
+    [Fact]
+    public async Task GetByIdAsync_ReturnsNull_WhenEntityDoesNotExist()
+    {
+        // Arrange
+        var nonExistentId = Guid.NewGuid();
+        _repository.Setup(r => r.GetByIdAsync(nonExistentId)).ReturnsAsync((T)null);
+
+        // Act
+        var result = await _service.GetByIdAsync(nonExistentId);
+
+        // Assert
+        Assert.Null(result);
+    }
+
 
     public T CreateEntity(Guid id)
     {
