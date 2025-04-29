@@ -56,7 +56,7 @@ public abstract class GenericServiceTests<T> where T : class, IHasId
     }
 
 
-    public T CreateEntity(Guid id)
+    private T CreateEntity(Guid id)
     {
         var entity = _fixture.Build<T>()
             .Create();

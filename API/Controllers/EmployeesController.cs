@@ -8,15 +8,17 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("/api/[controller]")]
-public class EmployeesController : GenericController<Employee>
+public class EmployeesController : ControllerBase
 {
     private readonly IEmployeeService _employeeService;
+    private readonly ILogger<GenericController<Employee>> _logger;
 
-
-    public EmployeesController(IGenericService<Employee> service, ILogger<GenericController<Employee>> logger, IEmployeeService employeeService) : base(service, logger)
+    public EmployeesController(IEmployeeService employeeService, ILogger<GenericController<Employee>> logger)
     {
         _employeeService = employeeService;
+        _logger = logger;
     }
+
 
     [HttpPost("bulk")]
     public async Task<IActionResult> CreateEmployees([FromBody] List<CreateEmployeeDto> dtos)

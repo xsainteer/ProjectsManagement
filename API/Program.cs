@@ -1,10 +1,7 @@
 using API.Extensions;
-using API.Mappers;
-using Business.Configuration;
-using Business.Services;
 using Data;
-using Data.Repositories;
-using Domain.Interfaces;
+using Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -16,6 +13,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //controllers
 builder.Services.AddControllers();
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
+builder.Services.AddIdentityCore<User>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddApiEndpoints();
 
 //DI container 
 builder.Services.AddCustomServices(builder.Configuration);
@@ -43,6 +46,8 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+
+app.MapIdentityApi<User>();
 
 app.UseRouting();
 

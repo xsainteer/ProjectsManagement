@@ -1,9 +1,11 @@
-﻿using Domain.Entities;
+﻿using Data.Entities;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext : IdentityDbContext<User>
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }
@@ -99,5 +101,6 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         
         //no need to include company relationships
+        base.OnModelCreating(modelBuilder);
     }
 }
