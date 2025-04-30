@@ -16,7 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentity<User, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddApiEndpoints();
 

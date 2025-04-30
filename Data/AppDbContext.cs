@@ -1,11 +1,12 @@
 ﻿using Data.Entities;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data;
 
-public class AppDbContext : IdentityDbContext<User>
+public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public DbSet<Company> Companies { get; set; }
     public DbSet<Employee> Employees { get; set; }
@@ -102,5 +103,10 @@ public class AppDbContext : IdentityDbContext<User>
         
         //no need to include company relationships
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasOne<Employee>(u => u.Employee)
+            .WithOne()
+            .HasForeignKey<User>(u => u.EmployeeId);
     }
 }
